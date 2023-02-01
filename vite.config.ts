@@ -9,4 +9,5 @@ export default defineConfig({
       localsConvention: 'camelCase',
     },
   },
+  base: '/lihkg-snapshot-viewer',
 });
