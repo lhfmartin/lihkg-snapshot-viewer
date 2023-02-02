@@ -4,6 +4,8 @@ import ThumbUpOffAltIcon from '@mui/icons-material/ThumbUpOffAlt';
 import styles from './MessageCard.module.css';
 import moment from 'moment';
 import Stack from '@mui/material/Stack';
+import { useContext } from 'react';
+import { PushClickedQuoteFromMsgNumsContext } from '../App';
 
 export default function MessageCard({
   message,
@@ -12,6 +14,9 @@ export default function MessageCard({
   message: Message;
   originalPosterUserId: Message['user']['user_id'];
 }) {
+  const pushClickedQuoteFromMsgNums = useContext(
+    PushClickedQuoteFromMsgNumsContext
+  );
   return message.status > 1 ? (
     <></>
   ) : (
@@ -46,6 +51,9 @@ export default function MessageCard({
       <div className={styles.quote}>
         {message.quote && (
           <a
+            onClick={() => {
+              pushClickedQuoteFromMsgNums(message.msg_num);
+            }}
             href={`#${message.quote.msg_num}`}
           >{`Go to quote (#${message.quote.msg_num})`}</a>
         )}

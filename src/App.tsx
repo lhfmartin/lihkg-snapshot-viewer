@@ -1,13 +1,22 @@
-import { ChangeEvent, useRef, useState } from 'react';
+import { ChangeEvent, createContext, useRef, useState } from 'react';
 import AppBar from '@mui/material/AppBar';
 import Toolbar from '@mui/material/Toolbar';
 import './App.css';
 import Message from './interfaces/message';
 import MessageCard from './components/MessageCard';
+import Fab from '@mui/material/Fab';
+import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
+
+export const PushClickedQuoteFromMsgNumsContext = createContext<Function>(
+  (msg_num: string) => {}
+);
 
 function App() {
-  let [processedMessages, setProcessedMessages] = useState<Message[]>([]);
-  let objectUrls = useRef<string[]>([]);
+  const [processedMessages, setProcessedMessages] = useState<Message[]>([]);
+  const objectUrls = useRef<string[]>([]);
+  const [clickedQuoteFromMsgNums, setClickedQuoteFromMsgNums] = useState<
+    string[]
+  >([]);
 
   function findImageSrcs(msg: string) {
     return Array.from(msg.matchAll(/src="(.*?)"/g)).map((x) => x[1]);
@@ -57,6 +66,13 @@ function App() {
     setProcessedMessages(messages);
   }
 
+  function gotoLastClickedQuoteMsg() {
+    if (clickedQuoteFromMsgNums.length) {
+      window.location.hash = clickedQuoteFromMsgNums.pop()!;
+      setClickedQuoteFromMsgNums([...clickedQuoteFromMsgNums]);
+    }
+  }
+
   return (
     <>
       <AppBar position='static'>
@@ -71,13 +87,39 @@ function App() {
           />
         </Toolbar>
       </AppBar>
-      {processedMessages.map((x) => (
-        <MessageCard
-          message={x}
-          originalPosterUserId={processedMessages[0].user.user_id}
-          key={x.msg_num}
-        />
-      ))}
+      <PushClickedQuoteFromMsgNumsContext.Provider
+        value={(msg_num: string) => {
+          if (
+            msg_num !==
+            clickedQuoteFromMsgNums[clickedQuoteFromMsgNums.length - 1]
+          )
+            setClickedQuoteFromMsgNums(
+              clickedQuoteFromMsgNums.concat([msg_num])
+            );
+        }}
+      >
+        {processedMessages.map((x) => (
+          <MessageCard
+            message={x}
+            originalPosterUserId={processedMessages[0].user.user_id}
+            key={x.msg_num}
+          />
+        ))}
+      </PushClickedQuoteFromMsgNumsContext.Provider>
+      {clickedQuoteFromMsgNums.length > 0 && (
+        <Fab
+          sx={{
+            position: 'fixed',
+            bottom: 30,
+            right: 30,
+          }}
+          aria-label='Down'
+          color='primary'
+          onClick={gotoLastClickedQuoteMsg}
+        >
+          <KeyboardArrowDownIcon />
+        </Fab>
+      )}
     </>
   );
 }

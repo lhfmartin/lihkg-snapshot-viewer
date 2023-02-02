@@ -5,9 +5,9 @@ name: Node.js CI
 
 on:
   push:
-    branches: [ "main" ]
+    branches: ['main']
   pull_request:
-    branches: [ "main" ]
+    branches: ['main']
 
 permissions:
   contents: read
@@ -18,23 +18,23 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v3
-      with:
-        ref: ${{ github.head_ref || github.ref_name }} 
-    - uses: pnpm/action-setup@v2
-      with:
-        version: 7
-    - uses: actions/setup-node@v3
-      with:
-        node-version: '14'
-        cache: 'pnpm'
-    - run: pnpm install
-    - run: pnpm build
-    - name: Upload artifact
-      uses: actions/upload-pages-artifact@v1
-      with:
-        path: ./dist
-        
+      - uses: actions/checkout@v3
+        with:
+          ref: ${{ github.head_ref || github.ref_name }}
+      - uses: pnpm/action-setup@v2
+        with:
+          version: 7
+      - uses: actions/setup-node@v3
+        with:
+          node-version: '14'
+          cache: 'pnpm'
+      - run: pnpm install
+      - run: pnpm build
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v1
+        with:
+          path: ./dist
+
   deploy:
     needs: build
     environment:
