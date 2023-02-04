@@ -118,6 +118,7 @@ function App() {
           <IconButton
             aria-label='Change Input'
             color='inherit'
+            disabled={!title}
             onClick={() => setShowDirectoryInput(!showDirectoryInput)}
           >
             <SwapHorizIcon />
