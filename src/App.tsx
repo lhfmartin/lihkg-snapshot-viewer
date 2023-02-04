@@ -12,6 +12,7 @@ export const PushClickedQuoteFromMsgNumsContext = createContext<Function>(
 );
 
 function App() {
+  const [title, setTitle] = useState('');
   const [processedMessages, setProcessedMessages] = useState<Message[]>([]);
   const objectUrls = useRef<string[]>([]);
   const [clickedQuoteFromMsgNums, setClickedQuoteFromMsgNums] = useState<
@@ -40,6 +41,8 @@ function App() {
 
     let files: File[] = Array.from(input.files!);
 
+    let topicFile: File = findFile('topic.json', files);
+
     let imagesFile: File = findFile('images.json', files);
 
     let imageFilenames: Record<string, string> = JSON.parse(
@@ -63,6 +66,7 @@ function App() {
       }
     });
 
+    setTitle(JSON.parse(await topicFile.text()).title);
     setProcessedMessages(messages);
   }
 
@@ -77,14 +81,16 @@ function App() {
     <>
       <AppBar position='static'>
         <Toolbar className={styles.topbar}>
-          <input
-            type='file'
-            directory=''
-            webkitdirectory=''
-            onChange={(e: ChangeEvent) => {
-              parseFiles(e.currentTarget as HTMLInputElement);
-            }}
-          />
+          {title || (
+            <input
+              type='file'
+              directory=''
+              webkitdirectory=''
+              onChange={(e: ChangeEvent) => {
+                parseFiles(e.currentTarget as HTMLInputElement);
+              }}
+            />
+          )}
         </Toolbar>
       </AppBar>
       <PushClickedQuoteFromMsgNumsContext.Provider
