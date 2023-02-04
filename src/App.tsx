@@ -1,7 +1,7 @@
 import { ChangeEvent, createContext, useRef, useState } from 'react';
 import AppBar from '@mui/material/AppBar';
 import Toolbar from '@mui/material/Toolbar';
-import './App.css';
+import styles from './App.module.css';
 import Message from './interfaces/message';
 import MessageCard from './components/MessageCard';
 import Fab from '@mui/material/Fab';
@@ -76,7 +76,7 @@ function App() {
   return (
     <>
       <AppBar position='static'>
-        <Toolbar>
+        <Toolbar className={styles.topbar}>
           <input
             type='file'
             directory=''
