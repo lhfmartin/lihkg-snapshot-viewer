@@ -132,7 +132,9 @@ function App() {
             clickedQuoteFromMsgNums[clickedQuoteFromMsgNums.length - 1]
           )
             setClickedQuoteFromMsgNums(
-              clickedQuoteFromMsgNums.concat([msg_num])
+              clickedQuoteFromMsgNums
+                .filter((x) => parseInt(x) > parseInt(msg_num))
+                .concat([msg_num])
             );
         }}
       >
