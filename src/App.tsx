@@ -6,12 +6,17 @@ import Message from './interfaces/message';
 import MessageCard from './components/MessageCard';
 import Fab from '@mui/material/Fab';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
+import Collapse from '@mui/material/Collapse';
+import IconButton from '@mui/material/IconButton';
+import SwapHorizIcon from '@mui/icons-material/SwapHoriz';
+import Grid from '@mui/material/Grid';
 
 export const PushClickedQuoteFromMsgNumsContext = createContext<Function>(
   (msg_num: string) => {}
 );
 
 function App() {
+  const [showDirectoryInput, setShowDirectoryInput] = useState(true);
   const [title, setTitle] = useState('');
   const [processedMessages, setProcessedMessages] = useState<Message[]>([]);
   const objectUrls = useRef<string[]>([]);
@@ -33,6 +38,7 @@ function App() {
 
     window.location.hash = '';
 
+    setTitle('');
     setProcessedMessages([]);
 
     if (input.files!.length === 0) {
@@ -68,6 +74,7 @@ function App() {
 
     setTitle(JSON.parse(await topicFile.text()).title);
     setProcessedMessages(messages);
+    setShowDirectoryInput(false);
   }
 
   function gotoLastClickedQuoteMsg() {
@@ -81,16 +88,40 @@ function App() {
     <>
       <AppBar position='static'>
         <Toolbar className={styles.topbar}>
-          {title || (
-            <input
-              type='file'
-              directory=''
-              webkitdirectory=''
-              onChange={(e: ChangeEvent) => {
-                parseFiles(e.currentTarget as HTMLInputElement);
-              }}
-            />
-          )}
+          <Grid container>
+            <Grid item>
+              <Collapse
+                orientation='horizontal'
+                in={!showDirectoryInput && !!title}
+                // unmountOnExit
+              >
+                <span style={{ whiteSpace: 'nowrap' }}>{title}</span>
+              </Collapse>
+            </Grid>
+            <Grid item>
+              <Collapse
+                orientation='horizontal'
+                in={showDirectoryInput || !title}
+                // unmountOnExit
+              >
+                <input
+                  type='file'
+                  directory=''
+                  webkitdirectory=''
+                  onChange={(e: ChangeEvent) => {
+                    parseFiles(e.currentTarget as HTMLInputElement);
+                  }}
+                />
+              </Collapse>
+            </Grid>
+          </Grid>
+          <IconButton
+            aria-label='Change Input'
+            color='inherit'
+            onClick={() => setShowDirectoryInput(!showDirectoryInput)}
+          >
+            <SwapHorizIcon />
+          </IconButton>
         </Toolbar>
       </AppBar>
       <PushClickedQuoteFromMsgNumsContext.Provider
