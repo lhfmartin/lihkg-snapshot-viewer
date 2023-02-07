@@ -10,6 +10,7 @@ import Collapse from '@mui/material/Collapse';
 import IconButton from '@mui/material/IconButton';
 import SwapHorizIcon from '@mui/icons-material/SwapHoriz';
 import Grid from '@mui/material/Grid';
+import Typography from '@mui/material/Typography';
 
 export const PushClickedQuoteFromMsgNumsContext = createContext<Function>(
   (msg_num: string) => {}
@@ -23,6 +24,8 @@ function App() {
   const [clickedQuoteFromMsgNums, setClickedQuoteFromMsgNums] = useState<
     string[]
   >([]);
+  const [reverseTitleAndInputOrder, setReverseTitleAndInputOrder] =
+    useState(true);
 
   function findImageSrcs(msg: string) {
     return Array.from(msg.matchAll(/src="(.*?)"/g)).map((x) => x[1]);
@@ -40,6 +43,7 @@ function App() {
 
     setTitle('');
     setProcessedMessages([]);
+    setReverseTitleAndInputOrder(true);
 
     if (input.files!.length === 0) {
       return;
@@ -48,6 +52,9 @@ function App() {
     let files: File[] = Array.from(input.files!);
 
     let topicFile: File = findFile('topic.json', files);
+
+    setTitle(JSON.parse(await topicFile.text()).title);
+    setShowDirectoryInput(false);
 
     let imagesFile: File = findFile('images.json', files);
 
@@ -72,9 +79,7 @@ function App() {
       }
     });
 
-    setTitle(JSON.parse(await topicFile.text()).title);
     setProcessedMessages(messages);
-    setShowDirectoryInput(false);
   }
 
   function gotoLastClickedQuoteMsg() {
@@ -88,14 +93,24 @@ function App() {
     <>
       <AppBar position='static'>
         <Toolbar className={styles.topbar}>
-          <Grid container>
+          <Grid
+            container
+            wrap='nowrap'
+            sx={{
+              overflow: 'hidden',
+              justifyContent: 'left',
+              justifyItems: 'left',
+            }}
+            direction={reverseTitleAndInputOrder ? 'row-reverse' : 'row'}
+          >
             <Grid item>
               <Collapse
                 orientation='horizontal'
                 in={!showDirectoryInput && !!title}
+                onEntered={() => setReverseTitleAndInputOrder(false)}
                 // unmountOnExit
               >
-                <span style={{ whiteSpace: 'nowrap' }}>{title}</span>
+                <Typography noWrap>{title}</Typography>
               </Collapse>
             </Grid>
             <Grid item>

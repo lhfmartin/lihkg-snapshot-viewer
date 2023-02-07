@@ -3,3 +3,7 @@
   box-sizing: border-box;
   width: min(100%, 1200px);
 }
+
+.topbar * {
+  max-width: 100%;
+}
