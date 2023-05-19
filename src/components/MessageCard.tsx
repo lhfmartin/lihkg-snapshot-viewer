@@ -5,7 +5,7 @@ import styles from './MessageCard.module.css';
 import moment from 'moment';
 import Stack from '@mui/material/Stack';
 import { useContext } from 'react';
-import { PushClickedQuoteFromMsgNumsContext } from '../App';
+import { PushClickedQuoteFromMsgNumsContext } from './ThreadViewer';
 
 export default function MessageCard({
   message,
