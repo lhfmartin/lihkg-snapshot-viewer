@@ -20,7 +20,7 @@ function ThreadViewer() {
   const [showDirectoryInput, setShowDirectoryInput] = useState(true);
   const [title, setTitle] = useState('');
   const [processedMessages, setProcessedMessages] = useState<Message[]>([]);
-  const objectUrls = useRef<string[]>([]);
+  const objectUrls = useRef(new Set<string>());
   const [clickedQuoteFromMsgNums, setClickedQuoteFromMsgNums] = useState<
     string[]
   >([]);
@@ -36,8 +36,10 @@ function ThreadViewer() {
   }
 
   async function parseFiles(input: HTMLInputElement) {
-    while (objectUrls.current.length)
-      URL.revokeObjectURL(objectUrls.current.pop()!);
+    objectUrls.current.forEach((objectUrl) => {
+      URL.revokeObjectURL(objectUrl);
+      objectUrls.current.delete(objectUrl);
+    });
 
     window.location.hash = '';
 
@@ -70,11 +72,14 @@ function ThreadViewer() {
       let imageSrcs = findImageSrcs(x.msg);
       for (const src of imageSrcs) {
         if (src in imageFilenames) {
-          let objectURL = URL.createObjectURL(
-            findFile(imageFilenames[src], files)
-          );
-          objectUrls.current.push(objectURL);
-          x.msg = x.msg.replace(src, objectURL);
+          if (!objectUrls.current.has(imageFilenames[src])) {
+            let objectURL = URL.createObjectURL(
+              findFile(imageFilenames[src], files)
+            );
+            objectUrls.current.add(objectURL);
+            imageFilenames[src] = objectURL;
+          }
+          x.msg = x.msg.replace(`src="${src}"`, `src="${imageFilenames[src]}"`);
         }
       }
     });
