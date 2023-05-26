@@ -48,7 +48,7 @@ export default function MessageCard({
           )}
         </span>
       </div>
-      <div className={styles.quote}>
+      <blockquote className={styles.quote}>
         {message.quote && (
           <a
             onClick={() => {
@@ -57,7 +57,7 @@ export default function MessageCard({
             href={`#${message.quote.msg_num}`}
           >{`Go to quote (#${message.quote.msg_num})`}</a>
         )}
-      </div>
+      </blockquote>
       <div
         className={styles.msg}
         dangerouslySetInnerHTML={{ __html: message.msg }}

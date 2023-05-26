@@ -48,6 +48,10 @@
   color: #cf000f;
 }
 
+.quote {
+  margin-left: 0;
+}
+
 .quote > a {
   padding: 10px;
   border-left: 2px solid #d6dadd;
@@ -56,6 +60,14 @@
 .quote > a:hover {
   border-left: 2px solid #000;
   transition: border-left 0.2s;
+}
+
+.msg sub {
+  border: 1px dotted lightgray;
+  border-radius: 4px;
+  display: inline-block;
+  padding: 15px;
+  font-size: inherit;
 }
 
 .msg img {
