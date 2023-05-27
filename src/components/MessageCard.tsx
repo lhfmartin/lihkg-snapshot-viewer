@@ -52,7 +52,10 @@ export default function MessageCard({
         {message.quote && (
           <a
             onClick={() => {
-              pushClickedQuoteFromMsgNums(message.msg_num);
+              pushClickedQuoteFromMsgNums(
+                message.msg_num,
+                message.quote!.msg_num
+              );
             }}
             href={`#${message.quote.msg_num}`}
           >{`Go to quote (#${message.quote.msg_num})`}</a>

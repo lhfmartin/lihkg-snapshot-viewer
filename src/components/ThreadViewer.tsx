@@ -1,4 +1,4 @@
-import { ChangeEvent, createContext, useRef, useState } from 'react';
+import { ChangeEvent, createContext, useEffect, useRef, useState } from 'react';
 import AppBar from '@mui/material/AppBar';
 import Toolbar from '@mui/material/Toolbar';
 import styles from './ThreadViewer.module.css';
@@ -13,7 +13,7 @@ import Grid from '@mui/material/Grid';
 import Typography from '@mui/material/Typography';
 
 export const PushClickedQuoteFromMsgNumsContext = createContext<Function>(
-  (msg_num: string) => {}
+  (from_msg_num: string, to_msg_num: string) => {}
 );
 
 function ThreadViewer() {
@@ -26,6 +26,40 @@ function ThreadViewer() {
   >([]);
   const [reverseTitleAndInputOrder, setReverseTitleAndInputOrder] =
     useState(true);
+  const messageCardIdsInViewport = useRef(new Set<number>());
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            messageCardIdsInViewport.current.add(parseInt(entry.target.id));
+          } else {
+            messageCardIdsInViewport.current.delete(parseInt(entry.target.id));
+          }
+          setClickedQuoteFromMsgNums((clickedQuoteFromMsgNums) => {
+            clickedQuoteFromMsgNums = clickedQuoteFromMsgNums.filter(
+              (x) => parseInt(x) > Math.min(...messageCardIdsInViewport.current)
+            );
+            return clickedQuoteFromMsgNums;
+          });
+        });
+      },
+      {
+        threshold: [0],
+      }
+    );
+
+    for (let i = 0; i < processedMessages.length; i++) {
+      let element = document.getElementById(`${i + 1}`);
+      if (element) observer.observe(element);
+    }
+
+    return () => {
+      observer.disconnect();
+      messageCardIdsInViewport.current.clear();
+    };
+  }, [processedMessages.length]);
 
   function findImageSrcs(msg: string) {
     return Array.from(msg.matchAll(/src="(.*?)"/g)).map((x) => x[1]);
@@ -46,6 +80,7 @@ function ThreadViewer() {
     setTitle('');
     setProcessedMessages([]);
     setReverseTitleAndInputOrder(true);
+    setClickedQuoteFromMsgNums([]);
 
     if (input.files!.length === 0) {
       return;
@@ -89,7 +124,27 @@ function ThreadViewer() {
 
   function gotoLastClickedQuoteMsg() {
     if (clickedQuoteFromMsgNums.length) {
-      window.location.hash = clickedQuoteFromMsgNums.pop()!;
+      let itemsToPop = 1;
+
+      if (clickedQuoteFromMsgNums.length >= 2) {
+        if (
+          (Math.round(
+            document
+              .getElementById(window.location.hash.substring(1))
+              ?.getBoundingClientRect().top!
+          ) == 0 &&
+            clickedQuoteFromMsgNums[clickedQuoteFromMsgNums.length - 1] ==
+              window.location.hash.substring(1)) || // the msg id at the top of the viewport matches with the top of the stack
+          window.scrollY + window.innerHeight >= document.body.offsetHeight // the page is already scrolled to the bottom
+        ) {
+          itemsToPop++;
+        }
+      }
+      for (let i = 0; i < itemsToPop; i++) {
+        window.location.hash = '';
+        window.location.hash = clickedQuoteFromMsgNums.pop()!;
+      }
+
       setClickedQuoteFromMsgNums([...clickedQuoteFromMsgNums]);
     }
   }
@@ -146,16 +201,12 @@ function ThreadViewer() {
         </Toolbar>
       </AppBar>
       <PushClickedQuoteFromMsgNumsContext.Provider
-        value={(msg_num: string) => {
-          if (
-            msg_num !==
-            clickedQuoteFromMsgNums[clickedQuoteFromMsgNums.length - 1]
-          )
-            setClickedQuoteFromMsgNums(
-              clickedQuoteFromMsgNums
-                .filter((x) => parseInt(x) > parseInt(msg_num))
-                .concat([msg_num])
-            );
+        value={(from_msg_num: string, to_msg_num: string) => {
+          setClickedQuoteFromMsgNums(
+            clickedQuoteFromMsgNums
+              .filter((x) => parseInt(x) > parseInt(from_msg_num))
+              .concat([from_msg_num, to_msg_num])
+          );
         }}
       >
         {processedMessages.map((x) => (
