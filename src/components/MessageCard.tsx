@@ -48,19 +48,27 @@ export default function MessageCard({
           )}
         </span>
       </div>
-      <blockquote className={styles.quote}>
-        {message.quote && (
+      {message.quote && (
+        <blockquote className={styles.quote}>
           <a
-            onClick={() => {
-              pushClickedQuoteFromMsgNums(
-                message.msg_num,
-                message.quote!.msg_num
-              );
-            }}
-            href={`#${message.quote.msg_num}`}
+            onClick={
+              message.quote!.status > 1
+                ? undefined
+                : () => {
+                    pushClickedQuoteFromMsgNums(
+                      message.msg_num,
+                      message.quote!.msg_num
+                    );
+                  }
+            }
+            href={
+              message.quote!.status > 1
+                ? undefined
+                : `#${message.quote.msg_num}`
+            }
           >{`Go to quote (#${message.quote.msg_num})`}</a>
-        )}
-      </blockquote>
+        </blockquote>
+      )}
       <div
         className={styles.msg}
         dangerouslySetInnerHTML={{ __html: message.msg }}
