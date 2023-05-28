@@ -11,6 +11,7 @@ import IconButton from '@mui/material/IconButton';
 import SwapHorizIcon from '@mui/icons-material/SwapHoriz';
 import Grid from '@mui/material/Grid';
 import Typography from '@mui/material/Typography';
+import decodeHtml from '../utils/decodeHtml';
 
 export const PushClickedQuoteFromMsgNumsContext = createContext<Function>(
   (from_msg_num: string, to_msg_num: string) => {}
@@ -66,7 +67,7 @@ function ThreadViewer() {
   }, [title]);
 
   function findImageSrcs(msg: string) {
-    return Array.from(msg.matchAll(/src="(.*?)"/g)).map((x) => x[1]);
+    return Array.from(msg.matchAll(/ src="(.*?)"/g)).map((x) => x[1]);
   }
 
   function findFile(name: string, files: File[]) {
@@ -110,15 +111,19 @@ function ThreadViewer() {
     messages.forEach((x) => {
       let imageSrcs = findImageSrcs(x.msg);
       for (const src of imageSrcs) {
-        if (src in imageFilenames) {
-          if (!objectUrls.current.has(imageFilenames[src])) {
+        const srcDecoded = decodeHtml(src);
+        if (srcDecoded in imageFilenames) {
+          if (!objectUrls.current.has(imageFilenames[srcDecoded])) {
             let objectURL = URL.createObjectURL(
-              findFile(imageFilenames[src], files)
+              findFile(imageFilenames[srcDecoded], files)
             );
             objectUrls.current.add(objectURL);
-            imageFilenames[src] = objectURL;
+            imageFilenames[srcDecoded] = objectURL;
           }
-          x.msg = x.msg.replace(`src="${src}"`, `src="${imageFilenames[src]}"`);
+          x.msg = x.msg.replace(
+            `src="${src}"`,
+            `src="${imageFilenames[srcDecoded]}"`
+          );
         }
       }
     });
