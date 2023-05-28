@@ -61,6 +61,10 @@ function ThreadViewer() {
     };
   }, [processedMessages.length]);
 
+  useEffect(() => {
+    document.title = (title && title + ' | ') + 'LIHKG Snapshot Viewer';
+  }, [title]);
+
   function findImageSrcs(msg: string) {
     return Array.from(msg.matchAll(/src="(.*?)"/g)).map((x) => x[1]);
   }
