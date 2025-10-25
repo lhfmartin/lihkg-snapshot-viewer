@@ -15,7 +15,7 @@ export default function MessageCard({
   originalPosterUserId: Message['user']['user_id'];
 }) {
   const pushClickedQuoteFromMsgNums = useContext(
-    PushClickedQuoteFromMsgNumsContext
+    PushClickedQuoteFromMsgNumsContext,
   );
   return message.status > 1 ? (
     <></>
@@ -44,7 +44,7 @@ export default function MessageCard({
         </span>
         <span className={styles.replyTime}>
           {moment(new Date(message.reply_time * 1000)).format(
-            'YYYY年M月D日 HH:mm:ss'
+            'YYYY年M月D日 HH:mm:ss',
           )}
         </span>
       </div>
@@ -57,7 +57,7 @@ export default function MessageCard({
                 : () => {
                     pushClickedQuoteFromMsgNums(
                       message.msg_num,
-                      message.quote!.msg_num
+                      message.quote!.msg_num,
                     );
                   }
             }

@@ -14,7 +14,7 @@ import Typography from '@mui/material/Typography';
 import decodeHtml from '../utils/decodeHtml';
 
 export const PushClickedQuoteFromMsgNumsContext = createContext<Function>(
-  (from_msg_num: string, to_msg_num: string) => {}
+  (from_msg_num: string, to_msg_num: string) => {},
 );
 
 function ThreadViewer() {
@@ -40,7 +40,8 @@ function ThreadViewer() {
           }
           setClickedQuoteFromMsgNums((clickedQuoteFromMsgNums) => {
             clickedQuoteFromMsgNums = clickedQuoteFromMsgNums.filter(
-              (x) => parseInt(x) > Math.min(...messageCardIdsInViewport.current)
+              (x) =>
+                parseInt(x) > Math.min(...messageCardIdsInViewport.current),
             );
             return clickedQuoteFromMsgNums;
           });
@@ -48,7 +49,7 @@ function ThreadViewer() {
       },
       {
         threshold: [0],
-      }
+      },
     );
 
     for (let i = 0; i < processedMessages.length; i++) {
@@ -101,7 +102,7 @@ function ThreadViewer() {
     let imagesFile: File = findFile('images.json', files);
 
     let imageFilenames: Record<string, string> = JSON.parse(
-      await imagesFile.text()
+      await imagesFile.text(),
     )['downloaded'];
 
     let messagesFile: File = findFile('messages.json', files);
@@ -115,14 +116,14 @@ function ThreadViewer() {
         if (srcDecoded in imageFilenames) {
           if (!objectUrls.current.has(imageFilenames[srcDecoded])) {
             let objectURL = URL.createObjectURL(
-              findFile(imageFilenames[srcDecoded], files)
+              findFile(imageFilenames[srcDecoded], files),
             );
             objectUrls.current.add(objectURL);
             imageFilenames[srcDecoded] = objectURL;
           }
           x.msg = x.msg.replace(
             `src="${src}"`,
-            `src="${imageFilenames[srcDecoded]}"`
+            `src="${imageFilenames[srcDecoded]}"`,
           );
         }
       }
@@ -140,7 +141,7 @@ function ThreadViewer() {
           (Math.round(
             document
               .getElementById(window.location.hash.substring(1))
-              ?.getBoundingClientRect().top!
+              ?.getBoundingClientRect().top!,
           ) == 0 &&
             clickedQuoteFromMsgNums[clickedQuoteFromMsgNums.length - 1] ==
               window.location.hash.substring(1)) || // the msg id at the top of the viewport matches with the top of the stack
@@ -214,7 +215,7 @@ function ThreadViewer() {
           setClickedQuoteFromMsgNums(
             clickedQuoteFromMsgNums
               .filter((x) => parseInt(x) > parseInt(from_msg_num))
-              .concat([from_msg_num, to_msg_num])
+              .concat([from_msg_num, to_msg_num]),
           );
         }}
       >
