@@ -101,9 +101,9 @@ function ThreadViewer() {
 
     let imagesFile: File = findFile('images.json', files);
 
-    let imageFilenames: Record<string, string> = JSON.parse(
-      await imagesFile.text(),
-    )['downloaded'];
+    let imageUrlToFilename: Record<string, string> = imagesFile
+      ? JSON.parse(await imagesFile.text())['downloaded']
+      : {};
 
     let messagesFile: File = findFile('messages.json', files);
 
@@ -113,17 +113,17 @@ function ThreadViewer() {
       let imageSrcs = findImageSrcs(x.msg);
       for (const src of imageSrcs) {
         const srcDecoded = decodeHtml(src);
-        if (srcDecoded in imageFilenames) {
-          if (!objectUrls.current.has(imageFilenames[srcDecoded])) {
+        if (srcDecoded in imageUrlToFilename) {
+          if (!objectUrls.current.has(imageUrlToFilename[srcDecoded])) {
             let objectURL = URL.createObjectURL(
-              findFile(imageFilenames[srcDecoded], files),
+              findFile(imageUrlToFilename[srcDecoded], files),
             );
             objectUrls.current.add(objectURL);
-            imageFilenames[srcDecoded] = objectURL;
+            imageUrlToFilename[srcDecoded] = objectURL;
           }
           x.msg = x.msg.replace(
             `src="${src}"`,
-            `src="${imageFilenames[srcDecoded]}"`,
+            `src="${imageUrlToFilename[srcDecoded]}"`,
           );
         }
       }
