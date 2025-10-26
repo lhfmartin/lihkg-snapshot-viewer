@@ -29,12 +29,18 @@ importers:
         specifier: ^18.2.0
         version: 18.2.0(react@18.2.0)
     devDependencies:
+      '@playwright/test':
+        specifier: ^1.56.1
+        version: 1.56.1
       '@testing-library/dom':
         specifier: ^10.4.1
         version: 10.4.1
       '@testing-library/react':
         specifier: ^16.3.0
         version: 16.3.0(@testing-library/dom@10.4.1)(@types/react-dom@18.2.19)(@types/react@18.2.55)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
+      '@types/node':
+        specifier: ^24.9.1
+        version: 24.9.1
       '@types/react':
         specifier: ^18.2.55
         version: 18.2.55
@@ -43,7 +49,7 @@ importers:
         version: 18.2.19
       '@vitejs/plugin-react':
         specifier: ^5.1.0
-        version: 5.1.0(vite@7.1.12(@types/node@20.19.23)(yaml@2.8.1))
+        version: 5.1.0(vite@7.1.12(@types/node@24.9.1)(yaml@2.8.1))
       happy-dom:
         specifier: ^20.0.8
         version: 20.0.8
@@ -61,13 +67,13 @@ importers:
         version: 5.3.3
       vite:
         specifier: ^7.1.12
-        version: 7.1.12(@types/node@20.19.23)(yaml@2.8.1)
+        version: 7.1.12(@types/node@24.9.1)(yaml@2.8.1)
       vite-tsconfig-paths:
         specifier: ^5.1.4
-        version: 5.1.4(typescript@5.3.3)(vite@7.1.12(@types/node@20.19.23)(yaml@2.8.1))
+        version: 5.1.4(typescript@5.3.3)(vite@7.1.12(@types/node@24.9.1)(yaml@2.8.1))
       vitest:
         specifier: ^4.0.3
-        version: 4.0.3(@edge-runtime/vm@5.0.0)(@types/node@20.19.23)(happy-dom@20.0.8)(jsdom@27.0.1(postcss@8.5.6))(yaml@2.8.1)
+        version: 4.0.3(@edge-runtime/vm@5.0.0)(@types/node@24.9.1)(happy-dom@20.0.8)(jsdom@27.0.1(postcss@8.5.6))(yaml@2.8.1)
 
 packages:
   '@asamuzakjp/css-color@4.0.5':
@@ -854,6 +860,14 @@ packages:
       '@types/react':
         optional: true
 
+  '@playwright/test@1.56.1':
+    resolution:
+      {
+        integrity: sha512-vSMYtL/zOcFpvJCW71Q/OEGQb7KYBPAdKh35WNSkaZA75JlAO8ED8UN6GUNTm3drWomcbcqRPFqQbLae8yBTdg==,
+      }
+    engines: { node: '>=18' }
+    hasBin: true
+
   '@popperjs/core@2.11.8':
     resolution:
       {
@@ -1125,6 +1139,12 @@ packages:
     resolution:
       {
         integrity: sha512-yIdlVVVHXpmqRhtyovZAcSy0MiPcYWGkoO4CGe/+jpP0hmNuihm4XhHbADpK++MsiLHP5MVlv+bcgdF99kSiFQ==,
+      }
+
+  '@types/node@24.9.1':
+    resolution:
+      {
+        integrity: sha512-QoiaXANRkSXK6p0Duvt56W208du4P9Uye9hWLWgGMDTEoKPhuenzNcC4vGUmrNkiOKTlIrBoyNQYNpSwfEZXSg==,
       }
 
   '@types/parse-json@4.0.2':
@@ -1592,6 +1612,14 @@ packages:
         integrity: sha512-NKfW6bec6GfKc0SGx1e07QZY9PE99u0Bft/0rzSD5k3sO/vwkVUpDUKVm5Gpp5Ue3YfShPFTX2070tDs5kB9Ng==,
       }
 
+  fsevents@2.3.2:
+    resolution:
+      {
+        integrity: sha512-xiqMQR4xAeHTuB9uWm+fFRcIOgKBMiOBP+eXiyT7jsgVCq1bkVygt00oASowB7EdtpOHaaPgKt812P9ab+DDKA==,
+      }
+    engines: { node: ^8.16.0 || ^10.6.0 || >=11.0.0 }
+    os: [darwin]
+
   fsevents@2.3.3:
     resolution:
       {
@@ -1963,6 +1991,22 @@ packages:
     engines: { node: '>=0.10' }
     hasBin: true
 
+  playwright-core@1.56.1:
+    resolution:
+      {
+        integrity: sha512-hutraynyn31F+Bifme+Ps9Vq59hKuUCz7H1kDOcBs+2oGguKkWTU50bBWrtz34OUWmIwpBTWDxaRPXrIXkgvmQ==,
+      }
+    engines: { node: '>=18' }
+    hasBin: true
+
+  playwright@1.56.1:
+    resolution:
+      {
+        integrity: sha512-aFi5B0WovBHTEvpM3DzXTUaeN6eN0qWnTkKx4NQaH4Wvcmc153PdaY2UBdSYKaGYw+UyWXSVyxDUg5DoPEttjw==,
+      }
+    engines: { node: '>=18' }
+    hasBin: true
+
   postcss@8.5.6:
     resolution:
       {
@@ -2319,6 +2363,12 @@ packages:
     resolution:
       {
         integrity: sha512-iwDZqg0QAGrg9Rav5H4n0M64c3mkR59cJ6wQp+7C4nI0gsmExaedaYLNO44eT4AtBBwjbTiGPMlt2Md0T9H9JQ==,
+      }
+
+  undici-types@7.16.0:
+    resolution:
+      {
+        integrity: sha512-Zz+aZWSj8LE6zoxD+xrjh4VfkIG8Ya6LvYkZqtUQGJPZjYl53ypCaUwWqo7eI0x66KBGeRo+mlBEkMSeSZ38Nw==,
       }
 
   update-browserslist-db@1.1.4:
@@ -3014,6 +3064,10 @@ snapshots:
     optionalDependencies:
       '@types/react': 18.2.55
 
+  '@playwright/test@1.56.1':
+    dependencies:
+      playwright: 1.56.1
+
   '@popperjs/core@2.11.8': {}
 
   '@rolldown/pluginutils@1.0.0-beta.43': {}
@@ -3143,6 +3197,10 @@ snapshots:
     dependencies:
       undici-types: 6.21.0
 
+  '@types/node@24.9.1':
+    dependencies:
+      undici-types: 7.16.0
+
   '@types/parse-json@4.0.2': {}
 
   '@types/prop-types@15.7.11': {}
@@ -3165,7 +3223,7 @@ snapshots:
 
   '@types/whatwg-mimetype@3.0.2': {}
 
-  '@vitejs/plugin-react@5.1.0(vite@7.1.12(@types/node@20.19.23)(yaml@2.8.1))':
+  '@vitejs/plugin-react@5.1.0(vite@7.1.12(@types/node@24.9.1)(yaml@2.8.1))':
     dependencies:
       '@babel/core': 7.28.5
       '@babel/plugin-transform-react-jsx-self': 7.27.1(@babel/core@7.28.5)
@@ -3173,7 +3231,7 @@ snapshots:
       '@rolldown/pluginutils': 1.0.0-beta.43
       '@types/babel__core': 7.20.5
       react-refresh: 0.18.0
-      vite: 7.1.12(@types/node@20.19.23)(yaml@2.8.1)
+      vite: 7.1.12(@types/node@24.9.1)(yaml@2.8.1)
     transitivePeerDependencies:
       - supports-color
 
@@ -3186,13 +3244,13 @@ snapshots:
       chai: 6.2.0
       tinyrainbow: 3.0.3
 
-  '@vitest/mocker@4.0.3(vite@7.1.12(@types/node@20.19.23)(yaml@2.8.1))':
+  '@vitest/mocker@4.0.3(vite@7.1.12(@types/node@24.9.1)(yaml@2.8.1))':
     dependencies:
       '@vitest/spy': 4.0.3
       estree-walker: 3.0.3
       magic-string: 0.30.21
     optionalDependencies:
-      vite: 7.1.12(@types/node@20.19.23)(yaml@2.8.1)
+      vite: 7.1.12(@types/node@24.9.1)(yaml@2.8.1)
 
   '@vitest/pretty-format@4.0.3':
     dependencies:
@@ -3418,6 +3476,9 @@ snapshots:
 
   find-root@1.1.0: {}
 
+  fsevents@2.3.2:
+    optional: true
+
   fsevents@2.3.3:
     optional: true
 
@@ -3632,6 +3693,14 @@ snapshots:
 
   pidtree@0.6.0: {}
 
+  playwright-core@1.56.1: {}
+
+  playwright@1.56.1:
+    dependencies:
+      playwright-core: 1.56.1
+    optionalDependencies:
+      fsevents: 2.3.2
+
   postcss@8.5.6:
     dependencies:
       nanoid: 3.3.11
@@ -3835,24 +3904,26 @@ snapshots:
 
   undici-types@6.21.0: {}
 
+  undici-types@7.16.0: {}
+
   update-browserslist-db@1.1.4(browserslist@4.27.0):
     dependencies:
       browserslist: 4.27.0
       escalade: 3.2.0
       picocolors: 1.1.1
 
-  vite-tsconfig-paths@5.1.4(typescript@5.3.3)(vite@7.1.12(@types/node@20.19.23)(yaml@2.8.1)):
+  vite-tsconfig-paths@5.1.4(typescript@5.3.3)(vite@7.1.12(@types/node@24.9.1)(yaml@2.8.1)):
     dependencies:
       debug: 4.4.3
       globrex: 0.1.2
       tsconfck: 3.1.6(typescript@5.3.3)
     optionalDependencies:
-      vite: 7.1.12(@types/node@20.19.23)(yaml@2.8.1)
+      vite: 7.1.12(@types/node@24.9.1)(yaml@2.8.1)
     transitivePeerDependencies:
       - supports-color
       - typescript
 
-  vite@7.1.12(@types/node@20.19.23)(yaml@2.8.1):
+  vite@7.1.12(@types/node@24.9.1)(yaml@2.8.1):
     dependencies:
       esbuild: 0.25.11
       fdir: 6.5.0(picomatch@4.0.3)
@@ -3861,14 +3932,14 @@ snapshots:
       rollup: 4.52.5
       tinyglobby: 0.2.15
     optionalDependencies:
-      '@types/node': 20.19.23
+      '@types/node': 24.9.1
       fsevents: 2.3.3
       yaml: 2.8.1
 
-  vitest@4.0.3(@edge-runtime/vm@5.0.0)(@types/node@20.19.23)(happy-dom@20.0.8)(jsdom@27.0.1(postcss@8.5.6))(yaml@2.8.1):
+  vitest@4.0.3(@edge-runtime/vm@5.0.0)(@types/node@24.9.1)(happy-dom@20.0.8)(jsdom@27.0.1(postcss@8.5.6))(yaml@2.8.1):
     dependencies:
       '@vitest/expect': 4.0.3
-      '@vitest/mocker': 4.0.3(vite@7.1.12(@types/node@20.19.23)(yaml@2.8.1))
+      '@vitest/mocker': 4.0.3(vite@7.1.12(@types/node@24.9.1)(yaml@2.8.1))
       '@vitest/pretty-format': 4.0.3
       '@vitest/runner': 4.0.3
       '@vitest/snapshot': 4.0.3
@@ -3885,11 +3956,11 @@ snapshots:
       tinyexec: 0.3.2
       tinyglobby: 0.2.15
       tinyrainbow: 3.0.3
-      vite: 7.1.12(@types/node@20.19.23)(yaml@2.8.1)
+      vite: 7.1.12(@types/node@24.9.1)(yaml@2.8.1)
       why-is-node-running: 2.3.0
     optionalDependencies:
       '@edge-runtime/vm': 5.0.0
-      '@types/node': 20.19.23
+      '@types/node': 24.9.1
       happy-dom: 20.0.8
       jsdom: 27.0.1(postcss@8.5.6)
     transitivePeerDependencies:
