@@ -30,7 +30,7 @@ jobs:
           cache: 'pnpm'
       - run: pnpm install
       - run: pnpm build
-      - run: pnpm exec playwright install chrome
+      - run: pnpm exec playwright install chromium
       - run: pnpm test
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v4
