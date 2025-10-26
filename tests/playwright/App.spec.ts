@@ -71,9 +71,18 @@ test.describe('Test the lihkg-snapshot-viewer application using Playwright', () 
     expect(await page.locator('button.MuiFab-root').count()).toEqual(0);
   });
 
-  test('When clicking on the swap icon button, the file input should be shown', async () => {
-    await expect(page.locator('input')).not.toBeInViewport();
+  test('When clicking on the swap icon button, the file input should be shown. When the swap icon button is clicked again, the file input should be hidden', async () => {
+    await expect(page.locator('.MuiToolbar-root input')).toBeHidden();
+    await expect(page.locator('.MuiToolbar-root p')).toBeVisible();
+
     await page.locator('button[aria-label="Change Input"]').click();
-    await expect(page.locator('input')).toBeInViewport();
+
+    await expect(page.locator('.MuiToolbar-root input')).toBeInViewport();
+    await expect(page.locator('.MuiToolbar-root p')).toBeHidden();
+
+    await page.locator('button[aria-label="Change Input"]').click();
+
+    await expect(page.locator('.MuiToolbar-root input')).toBeHidden();
+    await expect(page.locator('.MuiToolbar-root p')).toBeVisible();
   });
 });
