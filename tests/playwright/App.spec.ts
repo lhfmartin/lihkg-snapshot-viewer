@@ -53,10 +53,10 @@ test.describe('Test the lihkg-snapshot-viewer application using Playwright', () 
     await page
       .locator(`div[id="${idOfMessageWithQuote}"] > blockquote > a`)
       .click();
-    await expect(page).toHaveURL(URL + `#${idOfQuotedMessage}`);
+    await expect(page).toHaveURL(url + `#${idOfQuotedMessage}`);
     expect(await page.locator(Selector.Fab).count()).toEqual(1);
     await page.locator(Selector.Fab).click();
-    await expect(page).toHaveURL(URL + `#${idOfMessageWithQuote}`);
+    await expect(page).toHaveURL(url + `#${idOfMessageWithQuote}`);
     expect(await page.locator(Selector.Fab).count()).toEqual(0);
   });
 
@@ -70,7 +70,7 @@ test.describe('Test the lihkg-snapshot-viewer application using Playwright', () 
     await page
       .locator(`div[id="${idOfMessageWithQuote}"] > blockquote > a`)
       .click();
-    await expect(page).toHaveURL(URL + `#${idOfQuotedMessage}`);
+    await expect(page).toHaveURL(url + `#${idOfQuotedMessage}`);
     expect(await page.locator(Selector.Fab).count()).toEqual(1);
     await page.locator('div[id="1"]').scrollIntoViewIfNeeded();
     await expect(page.locator('div[id="1"]')).toBeInViewport();
@@ -78,12 +78,12 @@ test.describe('Test the lihkg-snapshot-viewer application using Playwright', () 
     await expect(
       page.locator(`div[id="${idOfQuotedMessage}"]`),
     ).toBeInViewport();
-    await expect(page).toHaveURL(URL + `#${idOfQuotedMessage}`);
+    await expect(page).toHaveURL(url + `#${idOfQuotedMessage}`);
     await page.locator(Selector.Fab).click();
     await expect(
       page.locator(`div[id="${idOfMessageWithQuote}"]`),
     ).toBeInViewport();
-    await expect(page).toHaveURL(URL + `#${idOfMessageWithQuote}`);
+    await expect(page).toHaveURL(url + `#${idOfMessageWithQuote}`);
     expect(await page.locator(Selector.Fab).count()).toEqual(0);
   });
 
@@ -97,7 +97,7 @@ test.describe('Test the lihkg-snapshot-viewer application using Playwright', () 
     await page
       .locator(`div[id="${idOfMessageWithQuote}"] > blockquote > a`)
       .click();
-    await expect(page).toHaveURL(URL + `#${idOfQuotedMessage}`);
+    await expect(page).toHaveURL(url + `#${idOfQuotedMessage}`);
     expect(await page.locator(Selector.Fab).count()).toEqual(1);
     await page
       .locator(`div[id="${idOfMessageWithQuote + 20}"]`)
@@ -133,12 +133,12 @@ test.describe('Test the lihkg-snapshot-viewer application using Playwright', () 
     await page
       .locator(`div[id="${idOfMessageWithQuote}"] > blockquote > a`)
       .click();
-    await expect(page).toHaveURL(URL + `#${idOfQuotedMessage}`);
+    await expect(page).toHaveURL(url + `#${idOfQuotedMessage}`);
     expect(await page.locator(Selector.Fab).count()).toEqual(1);
     await page.locator(Selector.Topbar).scrollIntoViewIfNeeded();
     await expect(page.locator(Selector.Topbar)).toBeInViewport({ ratio: 1 });
     await page.locator(Selector.Fab).click();
-    await expect(page).toHaveURL(URL + `#${idOfMessageWithQuote}`);
+    await expect(page).toHaveURL(url + `#${idOfMessageWithQuote}`);
   });
 
   test('After clicking on a quote at the bottom of the page and the quoted message is also at the bottom of the page, the FAB should disappear when clicked once', async () => {
@@ -154,7 +154,7 @@ test.describe('Test the lihkg-snapshot-viewer application using Playwright', () 
     await page
       .locator(`div[id="${idOfMessageWithQuote}"] > blockquote > a`)
       .click();
-    await expect(page).toHaveURL(URL + `#${idOfQuotedMessage}`);
+    await expect(page).toHaveURL(url + `#${idOfQuotedMessage}`);
     expect(await page.locator(Selector.Fab).count()).toEqual(1);
     await page.locator(Selector.Fab).click();
     expect(await page.locator(Selector.Fab).count()).toEqual(0);
