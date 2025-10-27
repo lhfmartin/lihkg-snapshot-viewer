@@ -114,4 +114,41 @@ test.describe('Test the lihkg-snapshot-viewer application using Playwright', () 
     await expect(page.locator('.MuiToolbar-root input')).toBeHidden();
     await expect(page.locator('.MuiToolbar-root p')).toBeVisible();
   });
+
+  test('After clicking on a quote quoting the first message, scrolling up to the very top of the page and clicking on the FAB, the message with the quote should be shown at the top of the page', async () => {
+    const idOfMessageWithQuote = 225;
+    const idOfQuotedMessage = 1;
+
+    await page
+      .locator(`div[id="${idOfMessageWithQuote}"]`)
+      .scrollIntoViewIfNeeded();
+    await page
+      .locator(`div[id="${idOfMessageWithQuote}"] > blockquote > a`)
+      .click();
+    await expect(page).toHaveURL(URL + `#${idOfQuotedMessage}`);
+    expect(await page.locator('button.MuiFab-root').count()).toEqual(1);
+    await page.locator('.MuiToolbar-root').scrollIntoViewIfNeeded();
+    await expect(page.locator('.MuiToolbar-root')).toBeInViewport({ ratio: 1 });
+    await page.locator('button.MuiFab-root').click();
+    await expect(page).toHaveURL(URL + `#${idOfMessageWithQuote}`);
+  });
+
+  test('After clicking on a quote at the bottom of the page and the quoted message is also at the bottom of the page, the FAB should disappear when clicked once', async () => {
+    const idOfMessageWithQuote = 228;
+    const idOfQuotedMessage = 227;
+
+    await page
+      .locator(`div[id="${idOfMessageWithQuote}"]`)
+      .scrollIntoViewIfNeeded();
+    await expect(page.locator(`div[id="${idOfQuotedMessage}"]`)).toBeInViewport(
+      { ratio: 1 },
+    );
+    await page
+      .locator(`div[id="${idOfMessageWithQuote}"] > blockquote > a`)
+      .click();
+    await expect(page).toHaveURL(URL + `#${idOfQuotedMessage}`);
+    expect(await page.locator('button.MuiFab-root').count()).toEqual(1);
+    await page.locator('button.MuiFab-root').click();
+    expect(await page.locator('button.MuiFab-root').count()).toEqual(0);
+  });
 });
