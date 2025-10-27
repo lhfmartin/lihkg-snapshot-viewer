@@ -17,57 +17,86 @@ test.describe('Test the lihkg-snapshot-viewer application using Playwright', () 
     await fileChooser.setFiles(
       path.join(
         process.env.PWD!,
-        'tests/test-assets/thread_3952556_20251025T205338Z',
+        'tests/test-assets/thread_3902532_20250415T224211Z',
       ),
     );
-    await page.locator('div[id="131"]').waitFor();
+    await page.locator('div[id="228"]').waitFor();
   });
 
   test("The title should contain the thread's title", async () => {
     await expect(page).toHaveTitle(
-      'LIHKG 更新公告 (2025-06-27) | LIHKG Snapshot Viewer',
+      'Burger King好食過M記 | LIHKG Snapshot Viewer',
     );
   });
 
   test("The thread's title should be shown on the top bar", async () => {
     expect(await page.locator('.MuiToolbar-root').innerText()).toStrictEqual(
-      'LIHKG 更新公告 (2025-06-27)',
+      'Burger King好食過M記',
     );
   });
 
   test('After clicking on a quote, the quoted message should be shown at the top of the page and the FAB will be visible. Clicking on the FAB should make the message with the quote show at the top of the page', async () => {
-    await page.locator('div[id="125"]').scrollIntoViewIfNeeded();
-    await page.locator('div[id="125"] > blockquote > a').click();
-    await expect(page).toHaveURL(URL + '#124');
+    const idOfMessageWithQuote = 57;
+    const idOfQuotedMessage = 52;
+
+    await page
+      .locator(`div[id="${idOfMessageWithQuote}"]`)
+      .scrollIntoViewIfNeeded();
+    await page
+      .locator(`div[id="${idOfMessageWithQuote}"] > blockquote > a`)
+      .click();
+    await expect(page).toHaveURL(URL + `#${idOfQuotedMessage}`);
     expect(await page.locator('button.MuiFab-root').count()).toEqual(1);
     await page.locator('button.MuiFab-root').click();
-    await expect(page).toHaveURL(URL + '#125');
+    await expect(page).toHaveURL(URL + `#${idOfMessageWithQuote}`);
     expect(await page.locator('button.MuiFab-root').count()).toEqual(0);
   });
 
   test('After clicking on a quote, scrolling up and clicking on the FAB, the quoted message should be shown at the top of the page. Clicking on the FAB again should make the message with the quote show at the top of the page', async () => {
-    await page.locator('div[id="125"]').scrollIntoViewIfNeeded();
-    await page.locator('div[id="125"] > blockquote > a').click();
-    await expect(page).toHaveURL(URL + '#124');
+    const idOfMessageWithQuote = 57;
+    const idOfQuotedMessage = 52;
+
+    await page
+      .locator(`div[id="${idOfMessageWithQuote}"]`)
+      .scrollIntoViewIfNeeded();
+    await page
+      .locator(`div[id="${idOfMessageWithQuote}"] > blockquote > a`)
+      .click();
+    await expect(page).toHaveURL(URL + `#${idOfQuotedMessage}`);
     expect(await page.locator('button.MuiFab-root').count()).toEqual(1);
     await page.locator('div[id="1"]').scrollIntoViewIfNeeded();
     await expect(page.locator('div[id="1"]')).toBeInViewport();
     await page.locator('button.MuiFab-root').click();
-    await expect(page.locator('div[id="124"]')).toBeInViewport();
-    await expect(page).toHaveURL(URL + '#124');
+    await expect(
+      page.locator(`div[id="${idOfQuotedMessage}"]`),
+    ).toBeInViewport();
+    await expect(page).toHaveURL(URL + `#${idOfQuotedMessage}`);
     await page.locator('button.MuiFab-root').click();
-    await expect(page.locator('div[id="125"]')).toBeInViewport();
-    await expect(page).toHaveURL(URL + '#125');
+    await expect(
+      page.locator(`div[id="${idOfMessageWithQuote}"]`),
+    ).toBeInViewport();
+    await expect(page).toHaveURL(URL + `#${idOfMessageWithQuote}`);
     expect(await page.locator('button.MuiFab-root').count()).toEqual(0);
   });
 
   test('After clicking on a quote and scrolling down pass the message with the quote, the FAB should disappear', async () => {
-    await page.locator('div[id="21"]').scrollIntoViewIfNeeded();
-    await page.locator('div[id="21"] > blockquote > a').click();
-    await expect(page).toHaveURL(URL + '#11');
+    const idOfMessageWithQuote = 69;
+    const idOfQuotedMessage = 64;
+
+    await page
+      .locator(`div[id="${idOfMessageWithQuote}"]`)
+      .scrollIntoViewIfNeeded();
+    await page
+      .locator(`div[id="${idOfMessageWithQuote}"] > blockquote > a`)
+      .click();
+    await expect(page).toHaveURL(URL + `#${idOfQuotedMessage}`);
     expect(await page.locator('button.MuiFab-root').count()).toEqual(1);
-    await page.locator('div[id="30"]').scrollIntoViewIfNeeded();
-    await expect(page.locator('div[id="30"]')).toBeInViewport();
+    await page
+      .locator(`div[id="${idOfMessageWithQuote + 20}"]`)
+      .scrollIntoViewIfNeeded();
+    await expect(
+      page.locator(`div[id="${idOfMessageWithQuote + 20}"]`),
+    ).toBeInViewport();
     expect(await page.locator('button.MuiFab-root').count()).toEqual(0);
   });
 
