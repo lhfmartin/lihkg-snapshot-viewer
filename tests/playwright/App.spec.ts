@@ -2,14 +2,22 @@ import { test, expect, Page } from '@playwright/test';
 import playwrightConfig from '@/playwright.config';
 import path from 'path';
 
+const url = (playwrightConfig.webServer as any).url;
+enum Selector {
+  Topbar = '.MuiToolbar-root',
+  Fab = 'button.MuiFab-root',
+  FileInput = `${Selector.Topbar} input`,
+  TopbarTitleP = `${Selector.Topbar} p`,
+  ChangeInputButton = 'button[aria-label="Change Input"]',
+}
+
 test.describe('Test the lihkg-snapshot-viewer application using Playwright', () => {
-  const URL = (playwrightConfig.webServer as any).url;
   let page: Page;
 
   test.beforeAll(async ({ browser }) => {
     page = await browser.newPage();
 
-    await page.goto(URL);
+    await page.goto(url);
 
     const fileChooserPromise = page.waitForEvent('filechooser');
     await page.locator('input').click();
@@ -30,7 +38,7 @@ test.describe('Test the lihkg-snapshot-viewer application using Playwright', () 
   });
 
   test("The thread's title should be shown on the top bar", async () => {
-    expect(await page.locator('.MuiToolbar-root').innerText()).toStrictEqual(
+    expect(await page.locator(Selector.Topbar).innerText()).toStrictEqual(
       'Burger King好食過M記',
     );
   });
@@ -46,10 +54,10 @@ test.describe('Test the lihkg-snapshot-viewer application using Playwright', () 
       .locator(`div[id="${idOfMessageWithQuote}"] > blockquote > a`)
       .click();
     await expect(page).toHaveURL(URL + `#${idOfQuotedMessage}`);
-    expect(await page.locator('button.MuiFab-root').count()).toEqual(1);
-    await page.locator('button.MuiFab-root').click();
+    expect(await page.locator(Selector.Fab).count()).toEqual(1);
+    await page.locator(Selector.Fab).click();
     await expect(page).toHaveURL(URL + `#${idOfMessageWithQuote}`);
-    expect(await page.locator('button.MuiFab-root').count()).toEqual(0);
+    expect(await page.locator(Selector.Fab).count()).toEqual(0);
   });
 
   test('After clicking on a quote, scrolling up and clicking on the FAB, the quoted message should be shown at the top of the page. Clicking on the FAB again should make the message with the quote show at the top of the page', async () => {
@@ -63,20 +71,20 @@ test.describe('Test the lihkg-snapshot-viewer application using Playwright', () 
       .locator(`div[id="${idOfMessageWithQuote}"] > blockquote > a`)
       .click();
     await expect(page).toHaveURL(URL + `#${idOfQuotedMessage}`);
-    expect(await page.locator('button.MuiFab-root').count()).toEqual(1);
+    expect(await page.locator(Selector.Fab).count()).toEqual(1);
     await page.locator('div[id="1"]').scrollIntoViewIfNeeded();
     await expect(page.locator('div[id="1"]')).toBeInViewport();
-    await page.locator('button.MuiFab-root').click();
+    await page.locator(Selector.Fab).click();
     await expect(
       page.locator(`div[id="${idOfQuotedMessage}"]`),
     ).toBeInViewport();
     await expect(page).toHaveURL(URL + `#${idOfQuotedMessage}`);
-    await page.locator('button.MuiFab-root').click();
+    await page.locator(Selector.Fab).click();
     await expect(
       page.locator(`div[id="${idOfMessageWithQuote}"]`),
     ).toBeInViewport();
     await expect(page).toHaveURL(URL + `#${idOfMessageWithQuote}`);
-    expect(await page.locator('button.MuiFab-root').count()).toEqual(0);
+    expect(await page.locator(Selector.Fab).count()).toEqual(0);
   });
 
   test('After clicking on a quote and scrolling down pass the message with the quote, the FAB should disappear', async () => {
@@ -90,29 +98,29 @@ test.describe('Test the lihkg-snapshot-viewer application using Playwright', () 
       .locator(`div[id="${idOfMessageWithQuote}"] > blockquote > a`)
       .click();
     await expect(page).toHaveURL(URL + `#${idOfQuotedMessage}`);
-    expect(await page.locator('button.MuiFab-root').count()).toEqual(1);
+    expect(await page.locator(Selector.Fab).count()).toEqual(1);
     await page
       .locator(`div[id="${idOfMessageWithQuote + 20}"]`)
       .scrollIntoViewIfNeeded();
     await expect(
       page.locator(`div[id="${idOfMessageWithQuote + 20}"]`),
     ).toBeInViewport();
-    expect(await page.locator('button.MuiFab-root').count()).toEqual(0);
+    expect(await page.locator(Selector.Fab).count()).toEqual(0);
   });
 
   test('When clicking on the swap icon button, the file input should be shown. When the swap icon button is clicked again, the file input should be hidden', async () => {
-    await expect(page.locator('.MuiToolbar-root input')).toBeHidden();
-    await expect(page.locator('.MuiToolbar-root p')).toBeVisible();
+    await expect(page.locator(Selector.FileInput)).toBeHidden();
+    await expect(page.locator(Selector.TopbarTitleP)).toBeVisible();
 
-    await page.locator('button[aria-label="Change Input"]').click();
+    await page.locator(Selector.ChangeInputButton).click();
 
-    await expect(page.locator('.MuiToolbar-root input')).toBeInViewport();
-    await expect(page.locator('.MuiToolbar-root p')).toBeHidden();
+    await expect(page.locator(Selector.FileInput)).toBeInViewport();
+    await expect(page.locator(Selector.TopbarTitleP)).toBeHidden();
 
-    await page.locator('button[aria-label="Change Input"]').click();
+    await page.locator(Selector.ChangeInputButton).click();
 
-    await expect(page.locator('.MuiToolbar-root input')).toBeHidden();
-    await expect(page.locator('.MuiToolbar-root p')).toBeVisible();
+    await expect(page.locator(Selector.FileInput)).toBeHidden();
+    await expect(page.locator(Selector.TopbarTitleP)).toBeVisible();
   });
 
   test('After clicking on a quote quoting the first message, scrolling up to the very top of the page and clicking on the FAB, the message with the quote should be shown at the top of the page', async () => {
@@ -126,10 +134,10 @@ test.describe('Test the lihkg-snapshot-viewer application using Playwright', () 
       .locator(`div[id="${idOfMessageWithQuote}"] > blockquote > a`)
       .click();
     await expect(page).toHaveURL(URL + `#${idOfQuotedMessage}`);
-    expect(await page.locator('button.MuiFab-root').count()).toEqual(1);
-    await page.locator('.MuiToolbar-root').scrollIntoViewIfNeeded();
-    await expect(page.locator('.MuiToolbar-root')).toBeInViewport({ ratio: 1 });
-    await page.locator('button.MuiFab-root').click();
+    expect(await page.locator(Selector.Fab).count()).toEqual(1);
+    await page.locator(Selector.Topbar).scrollIntoViewIfNeeded();
+    await expect(page.locator(Selector.Topbar)).toBeInViewport({ ratio: 1 });
+    await page.locator(Selector.Fab).click();
     await expect(page).toHaveURL(URL + `#${idOfMessageWithQuote}`);
   });
 
@@ -147,8 +155,8 @@ test.describe('Test the lihkg-snapshot-viewer application using Playwright', () 
       .locator(`div[id="${idOfMessageWithQuote}"] > blockquote > a`)
       .click();
     await expect(page).toHaveURL(URL + `#${idOfQuotedMessage}`);
-    expect(await page.locator('button.MuiFab-root').count()).toEqual(1);
-    await page.locator('button.MuiFab-root').click();
-    expect(await page.locator('button.MuiFab-root').count()).toEqual(0);
+    expect(await page.locator(Selector.Fab).count()).toEqual(1);
+    await page.locator(Selector.Fab).click();
+    expect(await page.locator(Selector.Fab).count()).toEqual(0);
   });
 });
