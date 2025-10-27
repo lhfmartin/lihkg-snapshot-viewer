@@ -146,7 +146,7 @@ function ThreadViewer() {
           ) == 0 &&
             clickedQuoteFromMsgNums[clickedQuoteFromMsgNums.length - 1] ==
               window.location.hash.substring(1)) || // the msg id at the top of the viewport matches with the top of the stack
-          window.scrollY + window.innerHeight + 1 >= document.body.offsetHeight // the page is already scrolled to the bottom
+          window.scrollY + window.innerHeight + 1 >= document.body.offsetHeight // the page is already scrolled to the bottom, a buffer of 1 pixel is added to accomodate nuances across different window size / zoom level / browser when calculating the scroll position
         ) {
           itemsToPop++;
         }
