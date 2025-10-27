@@ -141,7 +141,7 @@ test.describe('Test the lihkg-snapshot-viewer application using Playwright', () 
     await expect(page).toHaveURL(url + `#${idOfMessageWithQuote}`);
   });
 
-  test('After clicking on a quote at the bottom of the page and the quoted message is also at the bottom of the page, the FAB should disappear when clicked once', async () => {
+  test('After clicking on a quote at the bottom of the page and if the bottom border of the last mesaage touches the bottom of the browser window, the FAB should disappear when clicked once', async () => {
     const idOfMessageWithQuote = 228;
     const idOfQuotedMessage = 227;
 
