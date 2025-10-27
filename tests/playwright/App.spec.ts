@@ -156,6 +156,13 @@ test.describe('Test the lihkg-snapshot-viewer application using Playwright', () 
       .click();
     await expect(page).toHaveURL(url + `#${idOfQuotedMessage}`);
     expect(await page.locator(Selector.Fab).count()).toEqual(1);
+
+    // Scroll up a little (1 pixel) because some combinations of window size / zoom level / browser might induce nuances in calculating the scroll position
+    const yBeforeScroll = await page.evaluate(() => window.scrollY);
+    await page.evaluate(() => window.scrollBy(0, -1));
+    const yAfterScroll = await page.evaluate(() => window.scrollY);
+    expect(yBeforeScroll - yAfterScroll).toStrictEqual(1);
+
     await page.locator(Selector.Fab).click();
     expect(await page.locator(Selector.Fab).count()).toEqual(0);
   });
