@@ -171,10 +171,11 @@ function ThreadViewer() {
               overflow: 'hidden',
               justifyContent: 'left',
               justifyItems: 'left',
+              width: '100%',
             }}
             direction={reverseTitleAndInputOrder ? 'row-reverse' : 'row'}
           >
-            <Grid item>
+            <Grid>
               <Collapse
                 orientation='horizontal'
                 in={!showDirectoryInput && !!title}
@@ -184,7 +185,7 @@ function ThreadViewer() {
                 <Typography noWrap>{title}</Typography>
               </Collapse>
             </Grid>
-            <Grid item>
+            <Grid>
               <Collapse
                 orientation='horizontal'
                 in={showDirectoryInput || !title}
