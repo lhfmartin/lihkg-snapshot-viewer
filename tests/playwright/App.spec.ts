@@ -11,6 +11,13 @@ enum Selector {
   ChangeInputButton = 'button[aria-label="Change Input"]',
 }
 
+test('Visual regression testing on the home page (initial state)', async ({
+  page,
+}) => {
+  await page.goto(url);
+  await expect(page).toHaveScreenshot();
+});
+
 test.describe('Test the lihkg-snapshot-viewer application using Playwright', () => {
   let page: Page;
 
