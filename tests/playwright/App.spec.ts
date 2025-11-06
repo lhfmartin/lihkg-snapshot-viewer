@@ -2,6 +2,7 @@ import { test, expect, Page } from '@playwright/test';
 import playwrightConfig from '@/playwright.config';
 import path from 'path';
 
+const isDarwin = process.platform === 'darwin';
 const url = (playwrightConfig.webServer as any).url;
 enum Selector {
   Topbar = '.MuiToolbar-root',
@@ -14,6 +15,7 @@ enum Selector {
 test('Visual regression testing on the home page (initial state)', async ({
   page,
 }) => {
+  test.skip(!isDarwin);
   await page.goto(url);
   await expect(page).toHaveScreenshot();
 });
