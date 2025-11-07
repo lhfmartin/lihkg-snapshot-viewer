@@ -316,4 +316,15 @@ test.describe('ACT II', () => {
     await page.locator(Selector.Fab).click();
     await expect(page).toHaveURL(url + `#${idOfMessageWithQuote}`);
   });
+
+  test('All img src should be blob url', async () => {
+    for (const imgLocator of await page.locator(`img`).all()) {
+      const { protocol, host } = new URL(url);
+      expect(await imgLocator.getAttribute('src')).toMatch(
+        new RegExp(
+          `^blob:${protocol}//${host}/[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$`,
+        ),
+      );
+    }
+  });
 });
