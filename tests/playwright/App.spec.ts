@@ -6,10 +6,10 @@ const isDarwin = process.platform === 'darwin';
 const url = (playwrightConfig.webServer as any).url;
 enum Selector {
   Topbar = '.MuiToolbar-root',
-  Fab = 'button.MuiFab-root',
-  FileInput = `${Selector.Topbar} input`,
-  TopbarTitleP = `${Selector.Topbar} p`,
+  TopbarFileInput = `${Selector.Topbar} input`,
+  TopbarThreadTitle = `${Selector.Topbar} p`,
   ChangeInputButton = 'button[aria-label="Change Input"]',
+  Fab = 'button.MuiFab-root',
 }
 
 test('Visual regression testing on the home page (initial state)', async ({
@@ -29,7 +29,7 @@ test.describe('ACT I', () => {
     await page.goto(url);
 
     const fileChooserPromise = page.waitForEvent('filechooser');
-    await page.locator('input').click();
+    await page.locator(Selector.TopbarFileInput).click();
     const fileChooser = await fileChooserPromise;
     await fileChooser.setFiles(
       path.join(
@@ -123,18 +123,18 @@ test.describe('ACT I', () => {
   });
 
   test('When clicking on the swap icon button, the file input should be shown. When the swap icon button is clicked again, the file input should be hidden', async () => {
-    await expect(page.locator(Selector.FileInput)).toBeHidden();
-    await expect(page.locator(Selector.TopbarTitleP)).toBeVisible();
+    await expect(page.locator(Selector.TopbarFileInput)).toBeHidden();
+    await expect(page.locator(Selector.TopbarThreadTitle)).toBeVisible();
 
     await page.locator(Selector.ChangeInputButton).click();
 
-    await expect(page.locator(Selector.FileInput)).toBeInViewport();
-    await expect(page.locator(Selector.TopbarTitleP)).toBeHidden();
+    await expect(page.locator(Selector.TopbarFileInput)).toBeInViewport();
+    await expect(page.locator(Selector.TopbarThreadTitle)).toBeHidden();
 
     await page.locator(Selector.ChangeInputButton).click();
 
-    await expect(page.locator(Selector.FileInput)).toBeHidden();
-    await expect(page.locator(Selector.TopbarTitleP)).toBeVisible();
+    await expect(page.locator(Selector.TopbarFileInput)).toBeHidden();
+    await expect(page.locator(Selector.TopbarThreadTitle)).toBeVisible();
   });
 
   test('After clicking on a quote quoting the first message, scrolling up to the very top of the page and clicking on the FAB, the message with the quote should be shown at the top of the page', async () => {
@@ -191,7 +191,7 @@ test.describe('ACT II', () => {
     await page.goto(url);
 
     const fileChooserPromise = page.waitForEvent('filechooser');
-    await page.locator('input').click();
+    await page.locator(Selector.TopbarFileInput).click();
     const fileChooser = await fileChooserPromise;
     await fileChooser.setFiles(
       path.join(
@@ -285,18 +285,18 @@ test.describe('ACT II', () => {
   });
 
   test('When clicking on the swap icon button, the file input should be shown. When the swap icon button is clicked again, the file input should be hidden', async () => {
-    await expect(page.locator(Selector.FileInput)).toBeHidden();
-    await expect(page.locator(Selector.TopbarTitleP)).toBeVisible();
+    await expect(page.locator(Selector.TopbarFileInput)).toBeHidden();
+    await expect(page.locator(Selector.TopbarThreadTitle)).toBeVisible();
 
     await page.locator(Selector.ChangeInputButton).click();
 
-    await expect(page.locator(Selector.FileInput)).toBeInViewport();
-    await expect(page.locator(Selector.TopbarTitleP)).toBeHidden();
+    await expect(page.locator(Selector.TopbarFileInput)).toBeInViewport();
+    await expect(page.locator(Selector.TopbarThreadTitle)).toBeHidden();
 
     await page.locator(Selector.ChangeInputButton).click();
 
-    await expect(page.locator(Selector.FileInput)).toBeHidden();
-    await expect(page.locator(Selector.TopbarTitleP)).toBeVisible();
+    await expect(page.locator(Selector.TopbarFileInput)).toBeHidden();
+    await expect(page.locator(Selector.TopbarThreadTitle)).toBeVisible();
   });
 
   test('After clicking on a quote quoting the first message, scrolling up to the very top of the page and clicking on the FAB, the message with the quote should be shown at the top of the page', async () => {
