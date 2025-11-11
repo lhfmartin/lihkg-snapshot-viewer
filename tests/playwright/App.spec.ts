@@ -1,6 +1,7 @@
 import { test, expect, Page } from '@playwright/test';
 import playwrightConfig from '@/playwright.config';
 import path from 'path';
+import { readFile } from 'fs/promises';
 
 const isDarwin = process.platform === 'darwin';
 const url = (playwrightConfig.webServer as any).url;
@@ -10,6 +11,27 @@ enum Selector {
   TopbarThreadTitle = `${Selector.Topbar} p`,
   ChangeInputButton = 'button[aria-label="Change Input"]',
   Fab = 'button.MuiFab-root',
+}
+
+async function chooseFolderAndWaitTillRerendered(
+  page: Page,
+  folderName: string,
+) {
+  const fileChooserPromise = page.waitForEvent('filechooser');
+  await page.locator(Selector.TopbarFileInput).click();
+  const fileChooser = await fileChooserPromise;
+
+  const folderPath = path.join(
+    process.env.PWD!,
+    'tests/test-assets/',
+    folderName,
+  );
+  await fileChooser.setFiles(folderPath);
+
+  const messageCount = JSON.parse(
+    await readFile(path.join(folderPath, 'messages.json'), 'utf-8'),
+  ).length;
+  await page.locator(`div[id="${messageCount}"]`).waitFor();
 }
 
 test('Visual regression testing on the home page (initial state)', async ({
@@ -28,16 +50,10 @@ test.describe('ACT I', () => {
 
     await page.goto(url);
 
-    const fileChooserPromise = page.waitForEvent('filechooser');
-    await page.locator(Selector.TopbarFileInput).click();
-    const fileChooser = await fileChooserPromise;
-    await fileChooser.setFiles(
-      path.join(
-        process.env.PWD!,
-        'tests/test-assets/thread_3902532_20250415T224211Z', // The last message in this thread quotes the second last message, and both messages are short enough to be fully displayed on the screen simultaneously
-      ),
-    );
-    await page.locator('div[id="228"]').waitFor();
+    await chooseFolderAndWaitTillRerendered(
+      page,
+      'thread_3902532_20250415T224211Z',
+    ); // The last message in this thread quotes the second last message, and both messages are short enough to be fully displayed on the screen simultaneously
   });
 
   test("The title should contain the thread's title", async () => {
@@ -190,16 +206,10 @@ test.describe('ACT II', () => {
 
     await page.goto(url);
 
-    const fileChooserPromise = page.waitForEvent('filechooser');
-    await page.locator(Selector.TopbarFileInput).click();
-    const fileChooser = await fileChooserPromise;
-    await fileChooser.setFiles(
-      path.join(
-        process.env.PWD!,
-        'tests/test-assets/thread_3913245_20250426T155841Z', // This snapshot has downloaded images, and the images at the top are non-animated
-      ),
-    );
-    await page.locator('div[id="138"]').waitFor();
+    await chooseFolderAndWaitTillRerendered(
+      page,
+      'thread_3913245_20250426T155841Z',
+    ); // This snapshot has downloaded images, and the images at the top are non-animated
   });
 
   test("The title should contain the thread's title", async () => {
@@ -326,5 +336,46 @@ test.describe('ACT II', () => {
         ),
       );
     }
+  });
+});
+
+test.describe('ACT III', () => {
+  test('When replacing the snapshot, the state from the previous snapshot should be cleared, and the new snapshot should be rendered', async ({
+    page,
+  }) => {
+    page.goto(url);
+
+    await chooseFolderAndWaitTillRerendered(
+      page,
+      'thread_3902532_20250415T224211Z',
+    );
+    expect(await page.locator(Selector.Topbar).innerText()).toStrictEqual(
+      'Burger King好食過M記',
+    );
+
+    for (const idOfMessageWithQuote of [57, 25]) {
+      await page
+        .locator(`div[id="${idOfMessageWithQuote}"] > blockquote > a`)
+        .click();
+    }
+
+    expect(await page.locator(Selector.Fab).count()).toEqual(1);
+
+    await page.locator(Selector.ChangeInputButton).click();
+
+    await expect(page.locator(Selector.TopbarFileInput)).toBeInViewport();
+
+    await chooseFolderAndWaitTillRerendered(
+      page,
+      'thread_3913245_20250426T155841Z',
+    );
+
+    expect(await page.locator(Selector.Topbar).innerText()).toStrictEqual(
+      '轉工無人工加但fully remote轉唔轉好',
+    );
+
+    await expect(page).toHaveURL(url + '#');
+
+    expect(await page.locator(Selector.Fab).count()).toEqual(0);
   });
 });
