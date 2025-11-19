@@ -54,7 +54,7 @@ function ThreadViewer() {
     );
 
     for (let i = 0; i < processedMessages.length; i++) {
-      let element = document.getElementById(`${i + 1}`);
+      const element = document.getElementById(`${i + 1}`);
       if (element) observer.observe(element);
     }
 
@@ -70,10 +70,6 @@ function ThreadViewer() {
 
   function findImageSrcs(msg: string) {
     return Array.from(msg.matchAll(/ src="(.*?)"/g)).map((x) => x[1]);
-  }
-
-  function findFile(name: string, files: File[]) {
-    return files.filter((x) => x.webkitRelativePath.endsWith(name))[0];
   }
 
   async function parseFiles(input: HTMLInputElement) {
@@ -93,31 +89,36 @@ function ThreadViewer() {
       return;
     }
 
-    let files: File[] = Array.from(input.files!);
+    const filenameToFile = Array.from(input.files!).reduce<
+      Record<string, File>
+    >((filenameToFile, file) => {
+      filenameToFile[file.name] = file;
+      return filenameToFile;
+    }, {});
 
-    let topicFile: File = findFile('topic.json', files);
+    const topicFile = filenameToFile['topic.json'];
 
     setTitle(JSON.parse(await topicFile.text()).title);
     setShowDirectoryInput(false);
 
-    let imagesFile: File = findFile('images.json', files);
+    const imagesFile = filenameToFile['images.json'];
 
-    let imageUrlToFilename: Record<string, string> = imagesFile
+    const imageUrlToFilename: Record<string, string> = imagesFile
       ? JSON.parse(await imagesFile.text())['downloaded']
       : {};
 
-    let messagesFile: File = findFile('messages.json', files);
+    const messagesFile = filenameToFile['messages.json'];
 
-    let messages: Message[] = JSON.parse(await messagesFile.text());
+    const messages: Message[] = JSON.parse(await messagesFile.text());
 
     messages.forEach((x) => {
-      let imageSrcs = findImageSrcs(x.msg);
+      const imageSrcs = findImageSrcs(x.msg);
       for (const src of imageSrcs) {
         const srcDecoded = decodeHtml(src);
         if (srcDecoded in imageUrlToFilename) {
           if (!objectUrls.current.has(imageUrlToFilename[srcDecoded])) {
-            let objectURL = URL.createObjectURL(
-              findFile(imageUrlToFilename[srcDecoded], files),
+            const objectURL = URL.createObjectURL(
+              filenameToFile[imageUrlToFilename[srcDecoded]],
             );
             objectUrls.current.add(objectURL);
             imageUrlToFilename[srcDecoded] = objectURL;
