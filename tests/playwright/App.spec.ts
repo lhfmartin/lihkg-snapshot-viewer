@@ -2,9 +2,13 @@ import { test, expect, Page } from '@playwright/test';
 import playwrightConfig from '@/playwright.config';
 import path from 'path';
 import { readFile } from 'fs/promises';
+import { GenericContainer } from 'testcontainers';
 
 const isDarwin = process.platform === 'darwin';
-const url = (playwrightConfig.webServer as any).url;
+const url = ((playwrightConfig.webServer as any).url as string).replace(
+  'localhost',
+  'host.docker.internal',
+);
 enum Selector {
   Topbar = '.MuiToolbar-root',
   TopbarFileInput = `${Selector.Topbar} input`,
@@ -12,6 +16,7 @@ enum Selector {
   ChangeInputButton = 'button[aria-label="Change Input"]',
   Fab = 'button.MuiFab-root',
 }
+let playwrightContainer;
 
 async function chooseFolderAndWaitTillRerendered(
   page: Page,
@@ -33,6 +38,24 @@ async function chooseFolderAndWaitTillRerendered(
   ).length;
   await page.locator(`div[id="${messageCount}"]`).waitFor();
 }
+
+test.beforeAll(async () => {
+  playwrightContainer = await new GenericContainer(
+    'mcr.microsoft.com/playwright:v1.58.2-noble',
+  )
+    .withExposedPorts(3000)
+    .withUser('pwuser')
+    .withWorkingDir('/home/pwuser')
+    .withIpcMode('host')
+    .withCommand(
+      'npx -y playwright@1.58.2 run-server --port 3000 --host 0.0.0.0'.split(
+        ' ',
+      ),
+    )
+    .start();
+
+  process.env.PW_TEST_CONNECT_WS_ENDPOINT = `ws://127.0.0.1:${playwrightContainer.getFirstMappedPort()}/`;
+});
 
 test('Visual regression testing on the home page (initial state)', async ({
   page,
