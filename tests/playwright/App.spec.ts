@@ -3,7 +3,9 @@ import playwrightConfig from '@/playwright.config';
 import path from 'path';
 import { readFile } from 'fs/promises';
 import { GenericContainer } from 'testcontainers';
+import playwrightTestPackageJson from '@playwright/test/package.json' with { type: 'json' };
 
+const playwrightTestVersion = playwrightTestPackageJson.version;
 const isDarwin = process.platform === 'darwin';
 const url = ((playwrightConfig.webServer as any).url as string).replace(
   'localhost',
@@ -41,7 +43,7 @@ async function chooseFolderAndWaitTillRerendered(
 
 test.beforeAll(async () => {
   playwrightContainer = await new GenericContainer(
-    'mcr.microsoft.com/playwright:v1.58.2-noble',
+    `mcr.microsoft.com/playwright:v${playwrightTestVersion}-noble`,
   )
     .withExposedPorts(3000)
     .withUser('pwuser')
@@ -51,7 +53,7 @@ test.beforeAll(async () => {
       { host: 'host.docker.internal', ipAddress: 'host-gateway' },
     ])
     .withCommand(
-      'npx -y playwright@1.58.2 run-server --port 3000 --host 0.0.0.0'.split(
+      `npx -y playwright@${playwrightTestVersion} run-server --port 3000 --host 0.0.0.0`.split(
         ' ',
       ),
     )
