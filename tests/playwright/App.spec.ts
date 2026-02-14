@@ -47,6 +47,9 @@ test.beforeAll(async () => {
     .withUser('pwuser')
     .withWorkingDir('/home/pwuser')
     .withIpcMode('host')
+    .withExtraHosts([
+      { host: 'host.docker.internal', ipAddress: 'host-gateway' },
+    ])
     .withCommand(
       'npx -y playwright@1.58.2 run-server --port 3000 --host 0.0.0.0'.split(
         ' ',
