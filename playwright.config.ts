@@ -7,6 +7,9 @@ export default defineConfig({
     url: 'http://localhost:5173/lihkg-snapshot-viewer',
     stdout: 'ignore',
     stderr: 'pipe',
+    env: {
+      __VITE_ADDITIONAL_SERVER_ALLOWED_HOSTS: 'host.docker.internal',
+    },
   },
   testDir: './tests/playwright',
 });

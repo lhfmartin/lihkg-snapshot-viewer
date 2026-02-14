@@ -10,7 +10,4 @@ export default defineConfig({
     },
   },
   base: '/lihkg-snapshot-viewer',
-  server: {
-    allowedHosts: ['host.docker.internal'],
-  },
 });
