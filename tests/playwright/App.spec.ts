@@ -6,7 +6,6 @@ import { GenericContainer } from 'testcontainers';
 import playwrightTestPackageJson from '@playwright/test/package.json' with { type: 'json' };
 
 const playwrightTestVersion = playwrightTestPackageJson.version;
-const isDarwin = process.platform === 'darwin';
 const url = ((playwrightConfig.webServer as any).url as string).replace(
   'localhost',
   'host.docker.internal',
@@ -73,7 +72,6 @@ test.beforeAll(async () => {
 test('Visual regression testing on the home page (initial state)', async ({
   page,
 }) => {
-  test.skip(!isDarwin);
   await page.goto(url);
   await changeFont(page);
   await expect(page).toHaveScreenshot();
@@ -108,7 +106,6 @@ test.describe('ACT I', () => {
   });
 
   test('Visual regression testing', async () => {
-    test.skip(!isDarwin);
     await expect(page).toHaveScreenshot();
   });
 
@@ -266,7 +263,6 @@ test.describe('ACT II', () => {
   });
 
   test('Visual regression testing', async () => {
-    test.skip(!isDarwin);
     await expect(page).toHaveScreenshot();
   });
 
