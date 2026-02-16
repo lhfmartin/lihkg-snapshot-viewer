@@ -55,7 +55,7 @@ const test = base.extend<{}, { forEachWorker: void }>({
       await globalAfterAll();
     },
     { scope: 'worker', auto: true },
-  ], // automatically starts for every worker.
+  ],
 });
 
 async function changeFont(page: Page) {
