@@ -97,6 +97,10 @@ test.describe('ACT I', () => {
     ); // The last message in this thread quotes the second last message, and both messages are short enough to be fully displayed on the screen simultaneously
   });
 
+  test.afterAll(async () => {
+    await page.close();
+  });
+
   test("The title should contain the thread's title", async () => {
     await expect(page).toHaveTitle(
       'Burger King好食過M記 | LIHKG Snapshot Viewer',
@@ -252,6 +256,10 @@ test.describe('ACT II', () => {
       page,
       'thread_3913245_20250426T155841Z',
     ); // This snapshot has downloaded images, and the images at the top are non-animated
+  });
+
+  test.afterAll(async () => {
+    await page.close();
   });
 
   test("The title should contain the thread's title", async () => {
