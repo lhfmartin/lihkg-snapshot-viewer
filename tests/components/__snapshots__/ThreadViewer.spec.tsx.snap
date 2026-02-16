@@ -26,7 +26,7 @@ exports[`renders ThreadViewer 1`] = `
                 class="MuiCollapse-wrapperInner MuiCollapse-horizontal css-3cp540-MuiCollapse-wrapperInner"
               >
                 <p
-                  class="MuiTypography-root MuiTypography-body1 MuiTypography-noWrap css-peqrrs-MuiTypography-root"
+                  class="MuiTypography-root MuiTypography-body1 MuiTypography-noWrap css-eo3pw2-MuiTypography-root"
                 />
               </div>
             </div>
