@@ -20,6 +20,14 @@ enum Selector {
 }
 let playwrightContainer;
 
+async function changeFont(page: Page) {
+  // Using another font for screenshots because the default one on Linux doesn't look good
+  await page.addStyleTag({
+    path: './tests/test-assets/playwright-screenshots-style.css',
+  });
+  await page.waitForFunction(() => document.fonts.ready);
+}
+
 async function chooseFolderAndWaitTillRerendered(
   page: Page,
   folderName: string,
@@ -67,6 +75,7 @@ test('Visual regression testing on the home page (initial state)', async ({
 }) => {
   test.skip(!isDarwin);
   await page.goto(url);
+  await changeFont(page);
   await expect(page).toHaveScreenshot();
 });
 
@@ -77,6 +86,8 @@ test.describe('ACT I', () => {
     page = await browser.newPage();
 
     await page.goto(url);
+
+    await changeFont(page);
 
     await chooseFolderAndWaitTillRerendered(
       page,
@@ -233,6 +244,8 @@ test.describe('ACT II', () => {
     page = await browser.newPage();
 
     await page.goto(url);
+
+    await changeFont(page);
 
     await chooseFolderAndWaitTillRerendered(
       page,
