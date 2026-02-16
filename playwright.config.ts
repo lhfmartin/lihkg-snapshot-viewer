@@ -12,4 +12,5 @@ export default defineConfig({
     },
   },
   testDir: './tests/playwright',
+  snapshotPathTemplate: '{testDir}/{testFileName}-snapshots/{arg}{ext}',
 });
