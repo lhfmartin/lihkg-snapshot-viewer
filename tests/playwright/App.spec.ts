@@ -1,4 +1,4 @@
-import { test, expect, Page } from '@playwright/test';
+import { test as base, expect, Page } from '@playwright/test';
 import playwrightConfig from '@/playwright.config';
 import path from 'path';
 import { readFile } from 'fs/promises';
@@ -18,6 +18,45 @@ enum Selector {
   Fab = 'button.MuiFab-root',
 }
 let playwrightContainer: StartedTestContainer;
+
+async function startPlaywrightContainer() {
+  return new GenericContainer(
+    `mcr.microsoft.com/playwright:v${playwrightTestVersion}-noble`,
+  )
+    .withExposedPorts(3000)
+    .withUser('pwuser')
+    .withWorkingDir('/home/pwuser')
+    .withIpcMode('host')
+    .withExtraHosts([
+      { host: 'host.docker.internal', ipAddress: 'host-gateway' },
+    ])
+    .withCommand(
+      `npx -y playwright@${playwrightTestVersion} run-server --port 3000 --host 0.0.0.0`.split(
+        ' ',
+      ),
+    )
+    .start();
+}
+
+async function globalBeforeAll() {
+  playwrightContainer = await startPlaywrightContainer();
+  process.env.PW_TEST_CONNECT_WS_ENDPOINT = `ws://127.0.0.1:${playwrightContainer.getFirstMappedPort()}/`;
+}
+
+async function globalAfterAll() {
+  await playwrightContainer.stop();
+}
+
+const test = base.extend<{}, { forEachWorker: void }>({
+  forEachWorker: [
+    async ({}, use) => {
+      await globalBeforeAll();
+      await use();
+      await globalAfterAll();
+    },
+    { scope: 'worker', auto: true },
+  ], // automatically starts for every worker.
+});
 
 async function changeFont(page: Page) {
   // Using another font for screenshots because the default one on Linux doesn't look good
@@ -47,31 +86,6 @@ async function chooseFolderAndWaitTillRerendered(
   ).length;
   await page.locator(`div[id="${messageCount}"]`).waitFor();
 }
-
-test.beforeAll(async () => {
-  playwrightContainer = await new GenericContainer(
-    `mcr.microsoft.com/playwright:v${playwrightTestVersion}-noble`,
-  )
-    .withExposedPorts(3000)
-    .withUser('pwuser')
-    .withWorkingDir('/home/pwuser')
-    .withIpcMode('host')
-    .withExtraHosts([
-      { host: 'host.docker.internal', ipAddress: 'host-gateway' },
-    ])
-    .withCommand(
-      `npx -y playwright@${playwrightTestVersion} run-server --port 3000 --host 0.0.0.0`.split(
-        ' ',
-      ),
-    )
-    .start();
-
-  process.env.PW_TEST_CONNECT_WS_ENDPOINT = `ws://127.0.0.1:${playwrightContainer.getFirstMappedPort()}/`;
-});
-
-test.afterAll(async () => {
-  playwrightContainer.stop();
-});
 
 test('Visual regression testing on the home page (initial state)', async ({
   page,
