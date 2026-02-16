@@ -1,16 +1,69 @@
-import { test, expect, Page } from '@playwright/test';
+import { test as base, expect, Page } from '@playwright/test';
 import playwrightConfig from '@/playwright.config';
 import path from 'path';
 import { readFile } from 'fs/promises';
+import { GenericContainer, StartedTestContainer } from 'testcontainers';
+import playwrightTestPackageJson from '@playwright/test/package.json' with { type: 'json' };
 
-const isDarwin = process.platform === 'darwin';
-const url = (playwrightConfig.webServer as any).url;
+const playwrightTestVersion = playwrightTestPackageJson.version;
+const url = ((playwrightConfig.webServer as any).url as string).replace(
+  'localhost',
+  'host.docker.internal',
+);
 enum Selector {
   Topbar = '.MuiToolbar-root',
   TopbarFileInput = `${Selector.Topbar} input`,
   TopbarThreadTitle = `${Selector.Topbar} p`,
   ChangeInputButton = 'button[aria-label="Change Input"]',
   Fab = 'button.MuiFab-root',
+}
+let playwrightContainer: StartedTestContainer;
+
+async function startPlaywrightContainer() {
+  return new GenericContainer(
+    `mcr.microsoft.com/playwright:v${playwrightTestVersion}-noble`,
+  )
+    .withExposedPorts(3000)
+    .withUser('pwuser')
+    .withWorkingDir('/home/pwuser')
+    .withIpcMode('host')
+    .withExtraHosts([
+      { host: 'host.docker.internal', ipAddress: 'host-gateway' },
+    ])
+    .withCommand(
+      `npx -y playwright@${playwrightTestVersion} run-server --port 3000 --host 0.0.0.0`.split(
+        ' ',
+      ),
+    )
+    .start();
+}
+
+async function globalBeforeAll() {
+  playwrightContainer = await startPlaywrightContainer();
+  process.env.PW_TEST_CONNECT_WS_ENDPOINT = `ws://127.0.0.1:${playwrightContainer.getFirstMappedPort()}/`;
+}
+
+async function globalAfterAll() {
+  await playwrightContainer.stop();
+}
+
+const test = base.extend<{}, { forEachWorker: void }>({
+  forEachWorker: [
+    async ({}, use) => {
+      await globalBeforeAll();
+      await use();
+      await globalAfterAll();
+    },
+    { scope: 'worker', auto: true },
+  ],
+});
+
+async function changeFont(page: Page) {
+  // Using another font for screenshots because the default one on Linux doesn't look good
+  await page.addStyleTag({
+    path: './tests/test-assets/playwright-screenshots-style.css',
+  });
+  await page.waitForFunction(() => document.fonts.ready);
 }
 
 async function chooseFolderAndWaitTillRerendered(
@@ -37,8 +90,8 @@ async function chooseFolderAndWaitTillRerendered(
 test('Visual regression testing on the home page (initial state)', async ({
   page,
 }) => {
-  test.skip(!isDarwin);
   await page.goto(url);
+  await changeFont(page);
   await expect(page).toHaveScreenshot();
 });
 
@@ -50,10 +103,16 @@ test.describe('ACT I', () => {
 
     await page.goto(url);
 
+    await changeFont(page);
+
     await chooseFolderAndWaitTillRerendered(
       page,
       'thread_3902532_20250415T224211Z',
     ); // The last message in this thread quotes the second last message, and both messages are short enough to be fully displayed on the screen simultaneously
+  });
+
+  test.afterAll(async () => {
+    await page.close();
   });
 
   test("The title should contain the thread's title", async () => {
@@ -69,7 +128,6 @@ test.describe('ACT I', () => {
   });
 
   test('Visual regression testing', async () => {
-    test.skip(!isDarwin);
     await expect(page).toHaveScreenshot();
   });
 
@@ -206,10 +264,16 @@ test.describe('ACT II', () => {
 
     await page.goto(url);
 
+    await changeFont(page);
+
     await chooseFolderAndWaitTillRerendered(
       page,
       'thread_3913245_20250426T155841Z',
     ); // This snapshot has downloaded images, and the images at the top are non-animated
+  });
+
+  test.afterAll(async () => {
+    await page.close();
   });
 
   test("The title should contain the thread's title", async () => {
@@ -225,7 +289,6 @@ test.describe('ACT II', () => {
   });
 
   test('Visual regression testing', async () => {
-    test.skip(!isDarwin);
     await expect(page).toHaveScreenshot();
   });
 

@@ -26,11 +26,10 @@ jobs:
           version: 10
       - uses: actions/setup-node@v6
         with:
-          node-version: '24'
+          node-version: '22' # TODO: Change back to 24 after https://github.com/microsoft/playwright/pull/39275
           cache: 'pnpm'
       - run: pnpm install
       - run: pnpm build
-      - run: pnpm exec playwright install chromium
       - run: pnpm test
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v4
