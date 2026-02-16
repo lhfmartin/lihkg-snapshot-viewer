@@ -2,7 +2,7 @@ import { test, expect, Page } from '@playwright/test';
 import playwrightConfig from '@/playwright.config';
 import path from 'path';
 import { readFile } from 'fs/promises';
-import { GenericContainer } from 'testcontainers';
+import { GenericContainer, StartedTestContainer } from 'testcontainers';
 import playwrightTestPackageJson from '@playwright/test/package.json' with { type: 'json' };
 
 const playwrightTestVersion = playwrightTestPackageJson.version;
@@ -17,7 +17,7 @@ enum Selector {
   ChangeInputButton = 'button[aria-label="Change Input"]',
   Fab = 'button.MuiFab-root',
 }
-let playwrightContainer;
+let playwrightContainer: StartedTestContainer;
 
 async function changeFont(page: Page) {
   // Using another font for screenshots because the default one on Linux doesn't look good
@@ -67,6 +67,10 @@ test.beforeAll(async () => {
     .start();
 
   process.env.PW_TEST_CONNECT_WS_ENDPOINT = `ws://127.0.0.1:${playwrightContainer.getFirstMappedPort()}/`;
+});
+
+test.afterAll(async () => {
+  playwrightContainer.stop();
 });
 
 test('Visual regression testing on the home page (initial state)', async ({
