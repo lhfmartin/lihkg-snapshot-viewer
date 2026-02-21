@@ -32,6 +32,11 @@ jobs:
       - run: pnpm build
       - run: pnpm exec playwright install chromium
       - run: pnpm test
+      - name: Upload test report
+        if: ${{ always() }}
+        uses: actions/upload-artifact@v6
+        with:
+          path: ./playwright-report
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v4
         with:

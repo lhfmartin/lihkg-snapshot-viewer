@@ -8,7 +8,7 @@
     "build": "tsc && vite build",
     "preview": "vite preview",
     "prepare": "husky",
-    "test": "TZ=UTC vitest run && playwright test"
+    "test": "TZ=UTC vitest run && playwright test --reporter=html --trace on"
   },
   "dependencies": {
     "@emotion/react": "^11.14.0",
