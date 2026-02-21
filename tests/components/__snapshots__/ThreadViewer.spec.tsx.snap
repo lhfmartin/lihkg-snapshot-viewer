@@ -10,7 +10,7 @@ exports[`renders ThreadViewer 1`] = `
       class="MuiToolbar-root MuiToolbar-gutters MuiToolbar-regular _topbar_d581fd css-1ygil4i-MuiToolbar-root"
     >
       <div
-        class="MuiGrid-root MuiGrid-container MuiGrid-wrap-xs-nowrap MuiGrid-direction-xs-row-reverse css-xvjwuw-MuiGrid-root"
+        class="MuiGrid-root MuiGrid-container MuiGrid-wrap-xs-nowrap MuiGrid-direction-xs-row-reverse css-13ymnhx-MuiGrid-root"
       >
         <div
           class="MuiGrid-root MuiGrid-direction-xs-row css-17fpwt7-MuiGrid-root"
@@ -45,11 +45,34 @@ exports[`renders ThreadViewer 1`] = `
               <div
                 class="MuiCollapse-wrapperInner MuiCollapse-horizontal css-3cp540-MuiCollapse-wrapperInner"
               >
-                <input
-                  directory=""
-                  type="file"
-                  webkitdirectory=""
-                />
+                <label
+                  class="MuiButtonBase-root MuiButton-root MuiButton-text MuiButton-textInherit MuiButton-sizeLarge MuiButton-textSizeLarge MuiButton-colorInherit MuiButton-root MuiButton-text MuiButton-textInherit MuiButton-sizeLarge MuiButton-textSizeLarge MuiButton-colorInherit css-1l0oks4-MuiButtonBase-root-MuiButton-root"
+                  role="button"
+                  tabindex="-1"
+                >
+                  <input
+                    directory=""
+                    style="opacity: 0; width: 100%; height: 100%; position: absolute; left: 0px;"
+                    type="file"
+                    webkitdirectory=""
+                  />
+                  Choose Folder
+                  <span
+                    class="MuiButton-icon MuiButton-endIcon MuiButton-iconSizeLarge css-3155yg-MuiButton-endIcon"
+                  >
+                    <svg
+                      aria-hidden="true"
+                      class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium css-1umw9bq-MuiSvgIcon-root"
+                      data-testid="AddOutlinedIcon"
+                      focusable="false"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6z"
+                      />
+                    </svg>
+                  </span>
+                </label>
               </div>
             </div>
           </div>
