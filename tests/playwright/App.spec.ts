@@ -12,7 +12,7 @@ const url = ((playwrightConfig.webServer as any).url as string).replace(
 );
 enum Selector {
   Topbar = '.MuiToolbar-root',
-  TopbarFileInput = `${Selector.Topbar} input`,
+  TopbarChooseFolderButton = `${Selector.Topbar} label`,
   TopbarThreadTitle = `${Selector.Topbar} p`,
   ChangeInputButton = 'button[aria-label="Change Input"]',
   Fab = 'button.MuiFab-root',
@@ -71,7 +71,7 @@ async function chooseFolderAndWaitTillRerendered(
   folderName: string,
 ) {
   const fileChooserPromise = page.waitForEvent('filechooser');
-  await page.locator(Selector.TopbarFileInput).click();
+  await page.locator(Selector.TopbarChooseFolderButton).click();
   const fileChooser = await fileChooserPromise;
 
   const folderPath = path.join(
@@ -85,7 +85,9 @@ async function chooseFolderAndWaitTillRerendered(
     await readFile(path.join(folderPath, 'messages.json'), 'utf-8'),
   ).length;
   await page.locator(`div[id="${messageCount}"]`).waitFor();
-  await expect(page.locator(Selector.TopbarFileInput)).not.toBeInViewport();
+  await expect(
+    page.locator(Selector.TopbarChooseFolderButton),
+  ).not.toBeInViewport();
 }
 
 test('Visual regression testing on the home page (initial state)', async ({
@@ -198,17 +200,19 @@ test.describe('ACT I', () => {
   });
 
   test('When clicking on the swap icon button, the file input should be shown. When the swap icon button is clicked again, the file input should be hidden', async () => {
-    await expect(page.locator(Selector.TopbarFileInput)).toBeHidden();
+    await expect(page.locator(Selector.TopbarChooseFolderButton)).toBeHidden();
     await expect(page.locator(Selector.TopbarThreadTitle)).toBeVisible();
 
     await page.locator(Selector.ChangeInputButton).click();
 
-    await expect(page.locator(Selector.TopbarFileInput)).toBeInViewport();
+    await expect(
+      page.locator(Selector.TopbarChooseFolderButton),
+    ).toBeInViewport();
     await expect(page.locator(Selector.TopbarThreadTitle)).toBeHidden();
 
     await page.locator(Selector.ChangeInputButton).click();
 
-    await expect(page.locator(Selector.TopbarFileInput)).toBeHidden();
+    await expect(page.locator(Selector.TopbarChooseFolderButton)).toBeHidden();
     await expect(page.locator(Selector.TopbarThreadTitle)).toBeVisible();
   });
 
@@ -359,17 +363,19 @@ test.describe('ACT II', () => {
   });
 
   test('When clicking on the swap icon button, the file input should be shown. When the swap icon button is clicked again, the file input should be hidden', async () => {
-    await expect(page.locator(Selector.TopbarFileInput)).toBeHidden();
+    await expect(page.locator(Selector.TopbarChooseFolderButton)).toBeHidden();
     await expect(page.locator(Selector.TopbarThreadTitle)).toBeVisible();
 
     await page.locator(Selector.ChangeInputButton).click();
 
-    await expect(page.locator(Selector.TopbarFileInput)).toBeInViewport();
+    await expect(
+      page.locator(Selector.TopbarChooseFolderButton),
+    ).toBeInViewport();
     await expect(page.locator(Selector.TopbarThreadTitle)).toBeHidden();
 
     await page.locator(Selector.ChangeInputButton).click();
 
-    await expect(page.locator(Selector.TopbarFileInput)).toBeHidden();
+    await expect(page.locator(Selector.TopbarChooseFolderButton)).toBeHidden();
     await expect(page.locator(Selector.TopbarThreadTitle)).toBeVisible();
   });
 
@@ -427,7 +433,9 @@ test.describe('ACT III', () => {
 
     await page.locator(Selector.ChangeInputButton).click();
 
-    await expect(page.locator(Selector.TopbarFileInput)).toBeInViewport();
+    await expect(
+      page.locator(Selector.TopbarChooseFolderButton),
+    ).toBeInViewport();
 
     await chooseFolderAndWaitTillRerendered(
       page,
