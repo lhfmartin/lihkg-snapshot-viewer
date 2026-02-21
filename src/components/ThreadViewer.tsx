@@ -186,9 +186,7 @@ function ThreadViewer() {
                 onEntered={() => setReverseTitleAndInputOrder(false)}
                 // unmountOnExit
               >
-                <Typography noWrap sx={{ fontFamily: 'unset' }}>
-                  {title}
-                </Typography>
+                <Typography noWrap>{title}</Typography>
               </Collapse>
             </Grid>
             <Grid>
