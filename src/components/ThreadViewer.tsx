@@ -12,6 +12,8 @@ import SwapHorizIcon from '@mui/icons-material/SwapHoriz';
 import Grid from '@mui/material/Grid';
 import Typography from '@mui/material/Typography';
 import decodeHtml from '../utils/decodeHtml';
+import Button from '@mui/material/Button';
+import AddOutlinedIcon from '@mui/icons-material/AddOutlined';
 
 export const PushClickedQuoteFromMsgNumsContext = createContext<Function>(
   (from_msg_num: string, to_msg_num: string) => {},
@@ -173,6 +175,7 @@ function ThreadViewer() {
               justifyContent: 'left',
               justifyItems: 'left',
               width: '100%',
+              alignItems: 'center',
             }}
             direction={reverseTitleAndInputOrder ? 'row-reverse' : 'row'}
           >
@@ -194,14 +197,37 @@ function ThreadViewer() {
                 in={showDirectoryInput || !title}
                 // unmountOnExit
               >
-                <input
-                  type='file'
-                  directory=''
-                  webkitdirectory=''
-                  onChange={(e: ChangeEvent) => {
-                    parseFiles(e.currentTarget as HTMLInputElement);
+                <Button
+                  component='label'
+                  variant='text'
+                  color='inherit'
+                  tabIndex={-1}
+                  endIcon={<AddOutlinedIcon />}
+                  sx={{
+                    width: '100%',
+                    height: '100%',
+                    textWrap: 'nowrap',
+                    justifyContent: 'left',
                   }}
-                />
+                  size='large'
+                >
+                  <input
+                    type='file'
+                    directory=''
+                    webkitdirectory=''
+                    style={{
+                      opacity: 0,
+                      width: '100%',
+                      height: '100%',
+                      position: 'absolute',
+                      left: 0,
+                    }}
+                    onChange={(e: ChangeEvent) => {
+                      parseFiles(e.currentTarget as HTMLInputElement);
+                    }}
+                  />
+                  Choose Folder
+                </Button>
               </Collapse>
             </Grid>
           </Grid>
