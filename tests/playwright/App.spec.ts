@@ -85,6 +85,7 @@ async function chooseFolderAndWaitTillRerendered(
     await readFile(path.join(folderPath, 'messages.json'), 'utf-8'),
   ).length;
   await page.locator(`div[id="${messageCount}"]`).waitFor();
+  await expect(page.locator(Selector.TopbarFileInput)).not.toBeInViewport();
 }
 
 test('Visual regression testing on the home page (initial state)', async ({
