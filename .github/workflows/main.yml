@@ -24,7 +24,7 @@ jobs:
       - uses: pnpm/action-setup@v4
         with:
           version: 10
-      - uses: actions/setup-node@v6
+      - uses: actions/setup-node@v6.3.0
         with:
           node-version: '22' # TODO: Change back to 24 after https://github.com/microsoft/playwright/pull/39275
           cache: 'pnpm'
