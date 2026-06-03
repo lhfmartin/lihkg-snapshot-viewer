@@ -76,14 +76,28 @@ export default function MessageCard({
       <div className={styles.votes}>
         <Stack
           direction='row'
-          alignItems='stretch'
-          justifyContent='space-around'
-          gap={2}
+          sx={{
+            alignItems: 'stretch',
+            justifyContent: 'space-around',
+            gap: 2,
+          }}
         >
-          <Stack direction='row' alignItems='center' gap={1}>
+          <Stack
+            direction='row'
+            sx={{
+              alignItems: 'center',
+              gap: 1,
+            }}
+          >
             <ThumbUpOffAltIcon fontSize='small' /> {message.like_count}
           </Stack>
-          <Stack direction='row' alignItems='center' gap={1}>
+          <Stack
+            direction='row'
+            sx={{
+              alignItems: 'center',
+              gap: 1,
+            }}
+          >
             <ThumbDownOffAltIcon fontSize='small' /> {message.dislike_count}
           </Stack>
         </Stack>
