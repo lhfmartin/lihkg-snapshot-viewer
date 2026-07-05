@@ -46,7 +46,7 @@ exports[`renders ThreadViewer 1`] = `
                 class="MuiCollapse-wrapperInner MuiCollapse-horizontal css-3cp540-MuiCollapse-wrapperInner"
               >
                 <label
-                  class="MuiButtonBase-root MuiButton-root MuiButton-text MuiButton-sizeLarge MuiButton-colorInherit MuiButton-root MuiButton-text MuiButton-sizeLarge MuiButton-colorInherit css-1l0oks4-MuiButtonBase-root-MuiButton-root"
+                  class="MuiButtonBase-root MuiButton-root MuiButton-text MuiButton-sizeLarge MuiButton-colorInherit css-1l0oks4-MuiButtonBase-root-MuiButton-root"
                   role="button"
                   tabindex="-1"
                 >
