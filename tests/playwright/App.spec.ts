@@ -425,7 +425,7 @@ test.describe('ACT III', () => {
   test('When replacing the snapshot, the state from the previous snapshot should be cleared, and the new snapshot should be rendered', async ({
     page,
   }) => {
-    page.goto(url);
+    await page.goto(url);
 
     await chooseFolderAndWaitTillRerendered(
       page,
