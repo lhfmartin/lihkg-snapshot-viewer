@@ -4,6 +4,11 @@ import path from 'path';
 import { readFile } from 'fs/promises';
 import { GenericContainer, StartedTestContainer } from 'testcontainers';
 import playwrightTestPackageJson from '@playwright/test/package.json' with { type: 'json' };
+import moment from 'moment';
+
+const PLAYWRIGHT_TEST_CONTAINER_START_STOP_TIMEOUT = moment
+  .duration(3, 'minutes')
+  .asMilliseconds();
 
 const playwrightTestVersion = playwrightTestPackageJson.version;
 const url = ((playwrightConfig.webServer as any).url as string).replace(
@@ -35,6 +40,7 @@ async function startPlaywrightContainer() {
         ' ',
       ),
     )
+    .withStartupTimeout(PLAYWRIGHT_TEST_CONTAINER_START_STOP_TIMEOUT)
     .start();
 }
 
@@ -44,7 +50,9 @@ async function globalBeforeAll() {
 }
 
 async function globalAfterAll() {
-  await playwrightContainer.stop();
+  await playwrightContainer.stop({
+    timeout: PLAYWRIGHT_TEST_CONTAINER_START_STOP_TIMEOUT,
+  });
 }
 
 const test = base.extend<{}, { forEachWorker: void }>({
