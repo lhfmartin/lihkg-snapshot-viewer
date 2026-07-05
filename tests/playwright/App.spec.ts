@@ -62,7 +62,11 @@ const test = base.extend<{}, { forEachWorker: void }>({
       await use();
       await globalAfterAll();
     },
-    { scope: 'worker', auto: true },
+    {
+      scope: 'worker',
+      auto: true,
+      timeout: PLAYWRIGHT_TEST_CONTAINER_START_STOP_TIMEOUT,
+    },
   ],
 });
 
