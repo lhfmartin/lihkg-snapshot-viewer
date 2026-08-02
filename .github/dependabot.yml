@@ -25,4 +25,4 @@ updates:
       default-days: 30
     groups:
       github-actions:
-        patterns: '*'
+        - patterns: '*'
