@@ -13,4 +13,12 @@ export default defineConfig({
   },
   testDir: './tests/playwright',
   snapshotPathTemplate: '{testDir}/{testFileName}-snapshots/{arg}{ext}',
+  expect: {
+    toHaveScreenshot: {
+      threshold: 0,
+    },
+    toMatchSnapshot: {
+      threshold: 0,
+    },
+  },
 });
