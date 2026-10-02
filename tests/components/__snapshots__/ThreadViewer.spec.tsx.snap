@@ -46,7 +46,7 @@ exports[`renders ThreadViewer 1`] = `
                 class="MuiCollapse-wrapperInner MuiCollapse-horizontal css-3cp540-MuiCollapse-wrapperInner"
               >
                 <label
-                  class="MuiButtonBase-root MuiButton-root MuiButton-text MuiButton-sizeLarge MuiButton-colorInherit css-1l0oks4-MuiButtonBase-root-MuiButton-root"
+                  class="MuiButtonBase-root MuiButton-root MuiButton-text MuiButton-sizeLarge MuiButton-colorInherit css-5h9rp-MuiButtonBase-root-MuiButton-root"
                   role="button"
                   tabindex="-1"
                 >
@@ -80,7 +80,7 @@ exports[`renders ThreadViewer 1`] = `
       </div>
       <button
         aria-label="Change Input"
-        class="MuiButtonBase-root Mui-disabled MuiIconButton-root Mui-disabled MuiIconButton-colorInherit MuiIconButton-sizeMedium css-h7cjts-MuiButtonBase-root-MuiIconButton-root"
+        class="MuiButtonBase-root Mui-disabled MuiIconButton-root Mui-disabled MuiIconButton-colorInherit MuiIconButton-sizeMedium css-e9aoga-MuiButtonBase-root-MuiIconButton-root"
         disabled=""
         tabindex="-1"
         type="button"
