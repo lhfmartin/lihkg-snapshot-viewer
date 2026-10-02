@@ -26,9 +26,8 @@ let playwrightContainer: StartedTestContainer;
 
 async function startPlaywrightContainer() {
   return new GenericContainer(
-    `mcr.microsoft.com/playwright:v${playwrightTestVersion}`,
+    `mcr.microsoft.com/playwright:v${playwrightTestVersion}-noble-amd64`,
   )
-    .withPlatform('linux/amd64')
     .withExposedPorts(3000)
     .withUser('pwuser')
     .withWorkingDir('/home/pwuser')
