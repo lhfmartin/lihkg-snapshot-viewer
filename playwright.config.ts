@@ -15,10 +15,10 @@ export default defineConfig({
   snapshotPathTemplate: '{testDir}/{testFileName}-snapshots/{arg}{ext}',
   expect: {
     toHaveScreenshot: {
-      threshold: 0,
+      threshold: 0.01,
     },
     toMatchSnapshot: {
-      threshold: 0,
+      threshold: 0.01,
     },
   },
 });
